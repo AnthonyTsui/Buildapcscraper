@@ -1,0 +1,160 @@
+.container-fluid {
+	padding: 0 15px;
+}
+
+body {
+	background-color: #034439 !important;
+	background: linear-gradient(178deg, #034439, #2b6d62, #52beac, #3d9889, #034439);
+	background-repeat: no-repeat;
+
+}
+
+.navbar{
+	box-shadow: none !important; 
+}
+
+.navbar-custom {
+    background-color:rgba(5,5,5,0);
+}
+
+#particles-js {
+	/*background-color: #034439;*/
+	background-color: rgba(1,1,1,0);
+	height: 35vh;
+	position: sticky;
+
+}
+
+.connect {
+	text-align: center;
+	color: #fff;
+    padding: 5%;
+}
+
+canvas {
+  display: block;
+  vertical-align: bottom;
+}
+
+h2 {
+	text-align: center;
+	color: #fff;
+	font-weight: 200;
+	margin-top: 5%;
+	font-size: 400%;
+}
+
+.hacks {
+	height: 100%;
+	text-shadow: 1px 0px 15px #82805f;
+	padding: 0 !important;
+}
+
+
+
+.topLine{
+	padding-top: 1%;
+	padding-bottom: 1%;
+}
+
+.main-link {
+	font-weight: 200;
+	color: #FFF;
+	font-size: 120%;
+}
+
+img {
+	margin-top: 1%;
+}
+
+
+span{
+   -webkit-text-stroke-width: .5px;
+   color: rgba(255,255,255,0);
+   -webkit-text-stroke-color: white;
+}
+
+a {
+	color: white !important;
+}
+
+a:hover {
+	text-decoration: none !important;
+}
+
+h4{
+	color: #FFF !important;
+	margin-top: 1%;
+	margin-left: .5%;
+}
+
+h5{
+	text-align: center;
+	color: #fff;
+}
+
+.footer {
+	background-color: #61706e;
+	height: 120px;
+	color: #000;
+	text-align: center;
+	font-family: 'IM Fell French Canon SC', serif;
+}
+
+#company {
+	padding-top: 4%;
+}
+
+hr {
+	display: block;
+	border-style: solid;
+    border-width: .5px;
+    border-color: #eee;
+}
+
+.carousel-caption {
+	background-color: rgba(20, 130, 111, .85);
+	border-radius: 60px;
+	padding: 0 !important;
+}
+
+.event-name {
+	text-align: left;
+}
+
+.subTitle {
+	font-size: 80%;
+	color: rgba(249, 254, 251,.7);
+	margin-top: -5%;
+    padding-bottom: 2%;
+}
+
+.upcoming-heading {
+	color: #fff;
+	padding-top: 5%;
+	font-size:  400%;
+}
+
+.mb-1 {
+	margin-top: .15rem !important;
+}
+
+.media {
+	padding: 2% 5%;
+    background-color: rgba(255,255,255,.2);
+}
+
+#infiniteScroll {
+	padding-left: 0;
+}
+
+.media-list a {
+	color: #fff !important;
+	text-shadow: none;
+
+}
+
+.media-list a:hover {
+	color: white !important;
+	text-shadow: 1px 0px 25px #af6d0a;
+}

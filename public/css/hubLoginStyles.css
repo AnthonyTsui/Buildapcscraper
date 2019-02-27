@@ -1,0 +1,154 @@
+.container-fluid{
+	/*width: 100vh !important;*/
+}
+
+#infoBg{
+	background-image: url("/img/HackathonHubPhoto.jpg");
+	background-size: cover;
+	background-repeat: no-repeat;
+	color: #fff;
+	width: 100vw;
+	height: 100%;
+}
+
+.titleHeading {
+	font-size: 500%;
+	text-align: right;
+}
+
+.white {
+	background-color: #fff;
+	height: 1%;
+}
+
+span{
+	margin-left: 5%;
+	-webkit-text-stroke-width: 1px;
+	color: rgba(255,255,255,0);
+   -webkit-text-stroke-color: white;
+}
+
+#location{
+	margin-bottom: 1%;
+	margin-right: -2%;
+}
+
+.mainHeading{
+	font-size: 600%;
+	text-align: right;
+
+}
+#line {
+	color: #fff;
+	font-weight: 800px;
+}
+
+#formBg {
+	background-color:  #034439;
+	/*background-color: #0d9981;*/
+	text-align: center;
+	width:100vw;
+	height: 100vh;
+}
+
+.subH2 {
+	text-align: left;
+	margin-top:8%;
+}
+
+.subPlogin{
+	text-align: left;
+ 	padding-right: 20%;
+ 	line-height: 2.5em;
+ 	color: #fff;
+ }
+
+#logo {
+ 	padding-top: 20%;
+ }
+
+.form-control {
+	background-color: rgba(255,255,255,0) !important;
+	border-color: rgba(119,3,86,0) !important;
+	border-bottom-color: rgba(119,3,86,.25) !important;
+}
+
+
+#emailForm{
+ 	padding-top: 8%;
+}
+
+#pwForm {
+	padding-top: 5%;
+}
+
+.btn {
+	margin-top: 4%;
+	text-align: center;
+	text-decoration-style: none;
+}
+
+#join {
+	font-size: 50%;
+	color: white !important;
+	text-align: center;
+}
+
+a {
+	font-size: 100% !important;
+}
+
+#dontHave {
+	padding-top: 4%;
+}
+
+.signUpBg {
+	margin-left: -1.2%;
+	width: 100%;
+	height: 100%;
+	background-color: rgba(0,0,0,.7);
+	position: absolute;
+	top: 0;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	display: none;
+}
+
+.signUp-content {
+	width: 700px;
+	height: 420px;
+	background-color: rgba(175, 216, 194,.95);
+	border-radius: 5px;
+	text-align: left;
+	padding: 20px;
+	box-shadow: 0px 0px 10px #888888;
+}
+
+.popUpText{
+	text-align: center;
+	color: white;
+	text-shadow: 2px 2px 5px #444; 
+	font-weight: 400;
+	font-size: 200%;
+	 -webkit-text-stroke-color: rgba(0,0,0,0);
+	position: relative;
+}
+
+.popUp{
+	width: 50%;
+	display: block;
+	margin: 1% auto;
+}
+
+.close {
+	top: 1;
+	right: 10;
+	font-size: 42px;
+	transform: rotate(45deg);
+	margin-top: -2%;
+    margin-right: -1%;
+}
+
+
+

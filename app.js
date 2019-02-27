@@ -2,9 +2,15 @@ const express = require('express');
 const app = express()
 const port = 8000
 
-
+const bodyParser = require('body-parser');
 const request = require('request');
 const cheerio = require('cheerio');
+
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
+
+app.set('view engine','ejs');
+
 
 //Test newegg link: https://www.newegg.com/Product/ProductList.aspx?Submit=ENE&DEPA=0&Order=BESTMATCH&Description=1080&N=-1&isNodeId=1
 
@@ -69,6 +75,57 @@ request('https://www.newegg.com/Product/ProductList.aspx?Submit=ENE&DEPA=0&Order
 		console.log("Error on request" + error);
 	}
 })
+
+//Base page
+
+
+
+app.get('/', function(req, res)
+{
+	let itemNames = [];
+	let itemPrices = [];
+	//Preliminary testing to render data to front end
+	request('https://www.newegg.com/Product/ProductList.aspx?Submit=ENE&DEPA=0&Order=BESTMATCH&Description=1080&N=-1&isNodeId=1', (error, response, html) =>
+	{
+		if(!error && response.statusCode == 200) 
+		{
+			const $ = cheerio.load(html);
+
+			$('.item-info').each((i, temp) =>{	//returns names and used(?) prices but will not return actual prices along with link references
+
+				const itemPrice= $(temp).find('.price-current').text();
+				const itemName = $(temp).find('.item-title').text();
+
+				itemNames[i] = itemName;
+				console.log("Logged index " + i + " of itemNames with: " + itemName);
+
+				itemPrices[i] = itemPrice;
+				console.log("Logged index " + i + " of itemPrices with: " + itemPrice);
+
+				//console.log(itemName);
+				//console.log(itemPrice);
+				console.log("should be below here");
+				console.log(itemNames[3]);
+			});
+
+			console.log("------Finished running request------");
+			res.render('pages/home',
+		        {
+		         	productNames: itemNames,
+		         	productPrices: itemPrices,  
+		        });
+		}
+		else
+		{
+			console.log("Error on request" + error);
+			reject(error);	
+		}
+	})
+
+
+	//Actual render
+    
+});
 
 
 app.get('/', (req,res) => res.send('Hello World!'))

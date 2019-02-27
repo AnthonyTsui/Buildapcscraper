@@ -1,0 +1,117 @@
+
+/*.container-fluid{
+  padding: 0 !important;
+  width: 100% !important;
+  overflow: hidden;
+}*/
+
+.navbar{
+	box-shadow: none !important;
+}
+
+img {
+	margin-top: 1%;
+	margin-left: 2%;
+}
+
+.main-link {
+	font-weight: 200;
+	color: #FFF;
+	font-size: 120%;
+}
+
+.nav-item:hover .nav-link {
+    color: #fff;
+    background-color: #000; /* add background-color to active links */
+}
+
+span{
+   -webkit-text-stroke-width: .5px;
+   color: rgba(255,255,255,0);
+   -webkit-text-stroke-color: white;
+
+}
+
+.seeThru{
+	color: #FFF !important;
+	margin-top: 1%;
+	margin-left: .5%;
+
+}
+
+.greyBg {
+	background-color:rgba(190,190,190,0.5);
+	border-radius: 25px;
+	margin: 0 5%;
+}
+
+.profilePic {
+	margin-top: 25%;
+	margin-left: 25%;
+	padding-bottom: 35%;
+}
+
+a {
+	color: white !important;
+	font-weight: 100 !important;
+}
+
+a:hover {
+	text-decoration: none !important;
+}
+
+.info h1 {
+	margin-top: 3%;
+	color: #FFF;
+	font-weight: 100;
+	font-size: 300%;
+	text-decoration-line: 10%;
+	text-align: left;
+}
+
+.info h5 {
+	padding-right: 10%;
+	text-align: left;
+	color: #FFF;
+	font-weight: 100;
+}
+
+.info {
+ 
+}
+
+.lowerTwoThirds{ 
+	background-image: url("img/HackathonHubPhoto.jpg");
+	background-size: cover;
+	background-repeat: no-repeat;
+	padding: 2% 8%;
+}
+
+.teamBg {
+	border-radius: 10px;
+	background-color: rgba(113, 186, 164,.85);
+}
+
+.h4Teams {
+	font-size: 200%
+	font-weight: 200;
+	text-align: center;
+}
+
+li {
+	color: #FFF;
+	font-weight: 200;
+	font-size: 120%;
+}
+
+p, .co {
+	text-align: center;
+	padding: 0;
+}
+
+
+/*.right {
+	margin-right: 5%;
+}
+*/
+

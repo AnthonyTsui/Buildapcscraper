@@ -1,0 +1,60 @@
+<!-- views/partials/header.ejs -->
+
+<div class="row">
+<nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+      <a class="navbar-brand" href="/index"><span>HACKATHON</span>HUB</h4></a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarCollapse">
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item active">
+            <a class="nav-link main-link" href="/index">Home <span class="sr-only">(current)</span></a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link main-link" href="/account/1">Account</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link main-link" href="/about">Help</a>
+          </li>
+        </ul>
+        <form class="form-inline mt-2 mt-md-0" action = "/searchreq" method= "post">
+          <input type="text" class="form-control" id="eventName" name="eventName" placeholder="Search for events">
+          <button type="submit" class="btn btn-outline-secondary" value="accept">Search</button>
+        </form>
+      </div>
+</nav>
+</div>
+
+<!--<nav class="navbar navbar-dark bg-custom">
+      <a class="navbar-brand" href="/index"><span>HACKATHON</span>HUB</h4></a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarCollapse">
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item active">
+            <a class="nav-link main-link" href="/index">Home <span class="sr-only">(current)</span></a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link main-link" href="/account/1">Account</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link main-link" href="/about">Help</a>
+          </li>
+        </ul>
+
+        <form class="form-inline mt-2 mt-md-0" action = "/searchreq" method= "post">
+          <div class="form-inline mt-2 mt-md-0 real-search">
+              <div class="input-group mb-3">
+                <input type="text" class="form-control" id="eventName" name="eventName" placeholder="Search for events">
+                <div class="input-group-append">
+                  <button type="submit" class="btn btn-outline-secondary" value="accept">Search</button>
+                </div>
+              </div>
+          </div>
+        </form>
+      </div>
+</nav>-->
+
+<br>
