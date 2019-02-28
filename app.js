@@ -96,19 +96,16 @@ app.get('/', function(req, res)
 				const itemPrice= $(temp).find('.price-current').text();
 				const itemName = $(temp).find('.item-title').text();
 
-				itemNames[i] = itemName;
-				console.log("Logged index " + i + " of itemNames with: " + itemName);
+				itemNames[i] = itemName;		//Logs the items names nd price specifically to itemNames and itemPrices from request html
+				//console.log("Logged index " + i + " of itemNames with: " + itemName);
 
 				itemPrices[i] = itemPrice;
-				console.log("Logged index " + i + " of itemPrices with: " + itemPrice);
+				//console.log("Logged index " + i + " of itemPrices with: " + itemPrice);
 
-				//console.log(itemName);
-				//console.log(itemPrice);
-				console.log("should be below here");
-				console.log(itemNames[3]);
+			
 			});
 
-			console.log("------Finished running request------");
+			//console.log("------Finished running request------");
 			res.render('pages/home',
 		        {
 		         	productNames: itemNames,
