@@ -127,6 +127,21 @@ app.get('/', function(req, res)
     
 });
 
+app.get('/result', function(req,res){
+
+	res.render('pages/result',
+	{	
+		keyword:null,
+	});
+});
+
+app.post('/result', function(req,res){
+	let keyword = req.body.keyword;
+	res.render('pages/result',
+	{
+		keyword:keyword,
+	})
+});
 
 app.get('/', (req,res) => res.send('Hello World!'))
 
