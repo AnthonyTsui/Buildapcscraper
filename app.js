@@ -15,8 +15,11 @@ app.set('view engine','ejs');
 //Test newegg link: https://www.newegg.com/Product/ProductList.aspx?Submit=ENE&DEPA=0&Order=BESTMATCH&Description=1080&N=-1&isNodeId=1
 
 //request('http://reddit.com', (error, response, html) =>
+
+let keyword2 = '1070';
+let url = 'https://www.newegg.com/Product/ProductList.aspx?Submit=ENE&DEPA=0&Order=BESTMATCH&Description='+keyword2+'&N=-1&isNodeId=1'
 	
-request('https://www.newegg.com/Product/ProductList.aspx?Submit=ENE&DEPA=0&Order=BESTMATCH&Description=1080&N=-1&isNodeId=1', (error, response, html) =>
+request(url, (error, response, html) =>
 {
 	if(!error && response.statusCode == 200) 
 	{
@@ -132,14 +135,63 @@ app.get('/result', function(req,res){
 	res.render('pages/result',
 	{	
 		keyword:null,
+		productNames: null,
+		productPrices: null,
 	});
 });
 
+/*
 app.post('/result', function(req,res){
 	let keyword = req.body.keyword;
 	res.render('pages/result',
 	{
 		keyword:keyword,
+	})
+});
+*/
+
+//Getting results from keyword
+app.post('/result', function(req,res){
+	let keyword = req.body.keyword;
+	let itemNames = [];
+	let itemPrices = [];
+	let url = 'https://www.newegg.com/Product/ProductList.aspx?Submit=ENE&DEPA=0&Order=BESTMATCH&Description='+keyword+'&N=-1&isNodeId=1';
+	request(url, (error, response, html) =>
+	{
+		if(!error && response.statusCode == 200) 
+		{
+			const $ = cheerio.load(html);
+
+			$('.item-info').each((i, temp) =>{	//returns names and used(?) prices but will not return actual prices along with link references
+
+				const itemPrice= $(temp).find('.price-current').text();
+				const itemName = $(temp).find('.item-title').text();
+
+				itemNames[i] = itemName;
+				console.log("Logged index " + i + " of itemNames with: " + itemName);
+
+				itemPrices[i] = itemPrice;
+				console.log("Logged index " + i + " of itemPrices with: " + itemPrice);
+
+				//console.log(itemName);
+				//console.log(itemPrice);
+				console.log("should be below here");
+				console.log(itemNames[3]);
+			});
+
+			console.log("------Finished running request------");
+			res.render('pages/result',
+		        {
+		        	keyword:keyword,
+		         	productNames: itemNames,
+		         	productPrices: itemPrices,  
+		        });
+		}
+		else
+		{
+			console.log("Error on request" + error);
+			reject(error);	
+		}
 	})
 });
 
