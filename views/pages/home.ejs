@@ -26,8 +26,15 @@
 				<p>
 				<% if(productNames != null){ %>
               	<% for(var i=0; i < productNames.length; i++) { %> </p>
+              	<div>
+              		<img src="<%= imgUrls[i] %>">
+              	</div>
+              	<div>
               		 <%= productNames[i] %>
+              		 <br>
               		 <%= productPrices[i] %>
+              	</div>
+
               	<% } %>
               	<% } %>
 			</div>
