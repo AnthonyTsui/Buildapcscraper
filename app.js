@@ -22,12 +22,80 @@ app.set('view engine','ejs');
 
 let keyword2 = '1070';
 let url = 'https://www.newegg.com/Product/ProductList.aspx?Submit=ENE&DEPA=0&Order=BESTMATCH&Description='+keyword2+'&N=-1&isNodeId=1'
-	
+
+function neweggRequest2($, itemNames, itemPrices, imgUrls){
+	$('.item-container').each((i, temp) =>{	//returns names and used(?) prices but will not return actual prices along with link references
+				const itemPrice= $(temp).find('.price-current').text().replace(/\s\s+/g, '');
+				const itemName = $(temp).find('.item-title').text().replace(/\s\s+/g, '');
+				const imgUrl = $(temp).find('img').attr('src');
+
+				itemNames[i] = itemName;
+				console.log("Logged index " + i + " of itemNames with: " + itemName);
+
+				itemPrices[i] = itemPrice;
+				console.log("Logged index " + i + " of itemPrices with: " + itemPrice);
+
+				imgUrls[i] = imgUrl;
+				console.log("Logged index " + i + " of imgUrls with: " + imgUrl);
+
+			});
+
+			console.log("------Finished running request------");
+}
+/*	
+function neweggRequest(url, itemNames, itemPrices, imgUrls, renderPage){
+	request(url, (error, response, html) =>
+	{
+		if(!error && response.statusCode == 200) 
+		{
+			const $ = cheerio.load(html);
+
+			$('.item-container').each((i, temp) =>{	//returns names and used(?) prices but will not return actual prices along with link references
+
+
+				const itemPrice= $(temp).find('.price-current').text().replace(/\s\s+/g, '');
+				const itemName = $(temp).find('.item-title').text().replace(/\s\s+/g, '');
+				const imgUrl = $(temp).find('img').attr('src');
+
+				itemNames[i] = itemName;
+				console.log("Logged index " + i + " of itemNames with: " + itemName);
+
+				itemPrices[i] = itemPrice;
+				console.log("Logged index " + i + " of itemPrices with: " + itemPrice);
+
+				imgUrls[i] = imgUrl;
+				console.log("Logged index " + i + " of imgUrls with: " + imgUrl);
+
+				//console.log(itemName);
+				//console.log(itemPrice);
+				//console.log("should be below here");
+				//console.log(itemNames[3]);
+			});
+
+			console.log("------Finished running request------");
+			
+			res.render(renderPage,
+		        {
+		        	keyword:keyword,
+		         	productNames: itemNames,
+		         	productPrices: itemPrices,  
+		         	imgUrls: imgUrls,
+		        });
+		}
+		else
+		{
+			console.log("Error on request" + error);
+			reject(error);	
+		}
+	})
+}
+*/
+/*
 request(url, (error, response, html) =>
 {
 	if(!error && response.statusCode == 200) 
 	{
-		/* Testing request and logs to see what is returned
+		// Testing request and logs to see what is returned
 		//console.log(html);
 
 		const $ = cheerio.load(html);
@@ -60,7 +128,8 @@ request(url, (error, response, html) =>
 
 		}); 
 
-		End of prem. testing */
+		//End of prem. testing 
+		
 
 		const $ = cheerio.load(html);
 
@@ -85,6 +154,8 @@ request(url, (error, response, html) =>
 		console.log("Error on request" + error);
 	}
 })
+*/
+
 
 //Base page
 
@@ -96,44 +167,26 @@ app.get('/', function(req, res)
 	let itemPrices = [];
 	let imgUrls = [];
 	//Preliminary testing to render data to front end
-	request('https://www.newegg.com/Product/ProductList.aspx?Submit=ENE&DEPA=0&Order=BESTMATCH&Description=1080&N=-1&isNodeId=1', (error, response, html) =>
+
+	let url = 'https://www.newegg.com/Product/ProductList.aspx?Submit=ENE&DEPA=0&Order=BESTMATCH&Description=1080&N=-1&isNodeId=1';
+
+	/*
+	res.render('pages/home',
+		        {
+		         	productNames: itemNames,
+		         	productPrices: itemPrices,  
+		         	imgUrls: imgUrls,
+		        });*/
+
+	
+	request(url, (error, response, html) =>
 	{
 		if(!error && response.statusCode == 200) 
 		{
 			const $ = cheerio.load(html);
 
-			$('.item-container').each((i, temp) =>{	//returns names and used(?) prices but will not return actual prices along with link references
-				/*
-				const itemPrice= $(temp).find('.price-current').text();
-				const itemName = $(temp).find('.item-title').text();
+			neweggRequest2($, itemNames, itemPrices, imgUrls); //Simplifying some code into a function above, need to look into shortening more with promises or otherwise
 
-				itemNames[i] = itemName;
-				console.log("Logged index " + i + " of itemNames with: " + itemName);
-
-				itemPrices[i] = itemPrice;
-				console.log("Logged index " + i + " of itemPrices with: " + itemPrice);
-
-				//console.log(itemName);
-				//console.log(itemPrice);
-				console.log("should be below here");
-				console.log(itemNames[3]);
-				*/
-				const itemPrice= $(temp).find('.price-current').text().replace(/\s\s+/g, '');
-				const itemName = $(temp).find('.item-title').text().replace(/\s\s+/g, '');
-				const imgUrl = $(temp).find('img').attr('src');
-
-				itemNames[i] = itemName;
-				console.log("Logged index " + i + " of itemNames with: " + itemName);
-
-				itemPrices[i] = itemPrice;
-				console.log("Logged index " + i + " of itemPrices with: " + itemPrice);
-
-				imgUrls[i] = imgUrl;
-				console.log("Logged index " + i + " of imgUrls with: " + imgUrl);
-
-			});
-
-			console.log("------Finished running request------");
 			res.render('pages/home',
 		        {
 		         	productNames: itemNames,
@@ -146,7 +199,8 @@ app.get('/', function(req, res)
 			console.log("Error on request" + error);
 			reject(error);	
 		}
-	})
+	}) 
+	
 
 
 	//Actual render
@@ -164,15 +218,6 @@ app.get('/result', function(req,res){
 	});
 });
 
-/*
-app.post('/result', function(req,res){
-	let keyword = req.body.keyword;
-	res.render('pages/result',
-	{
-		keyword:keyword,
-	})
-});
-*/
 
 //Getting results from keyword
 app.post('/result', function(req,res){
@@ -186,6 +231,9 @@ app.post('/result', function(req,res){
 		if(!error && response.statusCode == 200) 
 		{
 			const $ = cheerio.load(html);
+			neweggRequest2($, itemNames, itemPrices, imgUrls);
+
+			/* Can delete below here
 
 			$('.item-container').each((i, temp) =>{	//returns names and used(?) prices but will not return actual prices along with link references
 
@@ -207,9 +255,9 @@ app.post('/result', function(req,res){
 				//console.log(itemPrice);
 				//console.log("should be below here");
 				//console.log(itemNames[3]);
-			});
 
-			console.log("------Finished running request------");
+			});
+			*/
 			res.render('pages/result',
 		        {
 		        	keyword:keyword,
