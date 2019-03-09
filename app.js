@@ -21,11 +21,12 @@ app.set('view engine','ejs');
 //request('http://reddit.com', (error, response, html) =>
 
 
-function neweggRequest2($, itemNames, itemPrices, imgUrls){
+function neweggRequest2($, itemNames, itemPrices, imgUrls, itemUrls ){
 	$('.item-container').each((i, temp) =>{	//returns names and used(?) prices but will not return actual prices along with link references
 				const itemPrice= $(temp).find('.price-current').text().replace(/\s\s+/g, '');
 				const itemName = $(temp).find('.item-title').text().replace(/\s\s+/g, '');
 				const imgUrl = $(temp).find('img').attr('src');
+				const itemUrl = $(temp).find('a').attr('href');
 
 				itemNames[i] = itemName;
 				console.log("Logged index " + i + " of itemNames with: " + itemName);
@@ -35,6 +36,9 @@ function neweggRequest2($, itemNames, itemPrices, imgUrls){
 
 				imgUrls[i] = imgUrl;
 				console.log("Logged index " + i + " of imgUrls with: " + imgUrl);
+
+				itemUrls[i] = itemUrl;
+				console.log("Logged index " + i + " of imgUrls with: " + itemUrl);
 
 			});
 
@@ -48,6 +52,7 @@ app.get('/', function(req, res)
 	let itemNames = [];
 	let itemPrices = [];
 	let imgUrls = [];
+	let itemUrls = [];
 	//Preliminary testing to render data to front end
 
 	let url = 'https://www.newegg.com/Product/ProductList.aspx?Submit=ENE&DEPA=0&Order=BESTMATCH&Description=1080&N=-1&isNodeId=1';
@@ -59,13 +64,14 @@ app.get('/', function(req, res)
 		{
 			const $ = cheerio.load(html);
 
-			neweggRequest2($, itemNames, itemPrices, imgUrls); //Simplifying some code into a function above, need to look into shortening more with promises or otherwise
+			neweggRequest2($, itemNames, itemPrices, imgUrls, itemUrls); //Simplifying some code into a function above, need to look into shortening more with promises or otherwise
 
 			res.render('pages/home',
 		        {
 		         	productNames: itemNames,
 		         	productPrices: itemPrices,  
 		         	imgUrls: imgUrls,
+		         	itemUrls: itemUrls,
 		        });
 		}
 		else
@@ -89,6 +95,7 @@ app.get('/result', function(req,res){
 		productNames: null,
 		productPrices: null,
 		imgUrls: null,
+		itemUrls: null,
 	});
 });
 
@@ -99,13 +106,16 @@ app.post('/result', function(req,res){
 	let itemNames = [];
 	let itemPrices = [];
 	let imgUrls = [];
+	let itemUrls = [];
+
+
 	let url = 'https://www.newegg.com/Product/ProductList.aspx?Submit=ENE&DEPA=0&Order=BESTMATCH&Description='+keyword+'&N=-1&isNodeId=1';
 	request(url, (error, response, html) =>
 	{
 		if(!error && response.statusCode == 200) 
 		{
 			const $ = cheerio.load(html);
-			neweggRequest2($, itemNames, itemPrices, imgUrls);
+			neweggRequest2($, itemNames, itemPrices, imgUrls, itemUrls);
 
 			res.render('pages/result',
 		        {
@@ -113,6 +123,7 @@ app.post('/result', function(req,res){
 		         	productNames: itemNames,
 		         	productPrices: itemPrices,  
 		         	imgUrls: imgUrls,
+		         	itemUrls: itemUrls,
 		        });
 		}
 		else

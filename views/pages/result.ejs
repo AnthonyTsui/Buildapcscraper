@@ -29,7 +29,7 @@
                 
 
 				<% if(keyword != null){ %>
-				<h1>Your result is <%= keyword %></h1>
+				<h1>Result for keyword: <%= keyword %></h1>
 				<% } %>
 				
 				<br>
@@ -44,9 +44,23 @@
               			<img src="<%= imgUrls[i] %>">
               		 </div>
               		<div>
-	              		 <%= productNames[i] %>
+              			<div>
+              				<strong>Result: <%= i %></strong>
+              			</div>
+              			<div>
+              				<bold> Product Name: </bold>
+              			</div>
+              			<div>
+              				<a href="<%= itemUrls[i] %>">
+              					<%= productNames[i] %>
+              				</a>
+              			</div>
+	              		 <!--<%= productNames[i] %>-->
 	              		 <br>
-	              		 <%= productPrices[i] %>
+	              		 <div>
+              				<bold> Product Price:  <%= productPrices[i] %>  </bold>
+              			</div>
+              		
               		</div>
               	<% } %>
               	<% } %>
