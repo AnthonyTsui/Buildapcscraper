@@ -80,6 +80,32 @@ function ebayRequest($, itemNames, itemPrices, imgUrls, itemUrls ){
 			console.log("------Finished running request------");
 }
 
+function bestbuyRequest($, itemNames, itemPrices, imgUrls, itemUrls ){
+	$('.sku-item').each((i, temp) =>{	//returns names and used(?) prices but will not return actual prices along with link references
+				//const itemPrice= $(temp).find('.s-item__price').html();	//using .text() returns the current bid price and the buy out price.
+				//const itemName = $(temp).find('.s-item__image-img').attr('alt'); 
+				let imgUrl = $(temp).find('product-image').attr('src');
+				//const itemUrl = $(temp).find('a').attr('href');
+
+				//itemNames[i] = itemName;
+				//console.log("Logged index " + i + " of itemNames with: " + itemName);
+
+				//itemPrices[i] = itemPrice;
+				//console.log("Logged index " + i + " of itemPrices with: " + itemPrice);
+
+				imgUrls[i] = imgUrl;
+				console.log("Logged index " + i + " of imgUrls with: " + imgUrl);
+
+				//itemUrls[i] = itemUrl;
+				//console.log("Logged index " + i + " of itemUrls with: " + itemUrl);
+
+				
+
+			});
+
+			console.log("------Finished running request------");
+}
+
 /*
 function ebayRequest2($){
 	$('.s-item').each((i, temp) =>{	//returns names and used(?) prices but will not return actual prices along with link references
@@ -130,8 +156,13 @@ app.get('/', function(req, res)
 	let itemUrls = [];
 	//Preliminary testing to render data to front end
 
-	let url = 'https://www.newegg.com/Product/ProductList.aspx?Submit=ENE&DEPA=0&Order=BESTMATCH&Description=1080&N=-1&isNodeId=1'; //Newegg test link
+	//let url = 'https://www.newegg.com/Product/ProductList.aspx?Submit=ENE&DEPA=0&Order=BESTMATCH&Description=1080&N=-1&isNodeId=1'; //Newegg test link
 	//let url = 'https://www.ebay.com/sch/i.html?_from=R40&_trksid=m570.l1313&_nkw=1080&_sacat=0'; //ebay test link
+	let url = 'https://www.bestbuy.com/site/searchpage.jsp?st=1080&_dyncharset=UTF-8&id=pcat17071&type=page&sc=Global&cp=1&nrp=&sp=&qp=&list=n&af=true&iht=y&usc=All+Categories&ks=960&keys=keys' //bestbuy test link
+	//let url = 'https://www.amazon.com/s?k=1080&ref=nb_sb_noss' // amazon test link
+	 //let url = 'https://www.walmart.com/search/?cat_id=0&query=1080'; // walmart test link
+	 //let url = 'https://www.frys.com/search?search_type=regular&sqxts=1&cat=&query_string=1080%20card&nearbyStoreName=false' //frys test link
+	 //let url = 'https://www.target.com/s?searchTerm=1080' //target test link
 
 	
 	request(url, (error, response, html) =>
@@ -154,6 +185,56 @@ app.get('/', function(req, res)
 		else
 		{
 			console.log("Error on request" + error);
+			res.render('pages/result',
+		        {
+		         	productNames: null,
+		         	productPrices: null,  
+		         	imgUrls: null,
+		         	itemUrls: null,
+		        });
+		}
+	}) 
+	
+
+
+	//Actual render
+    
+});
+
+
+app.get('/testGet', function(req, res)
+{
+	let itemNames = [];
+	let itemPrices = [];
+	let imgUrls = [];
+	let itemUrls = [];
+	//Preliminary testing to render data to front end
+
+	//let url = 'https://www.newegg.com/Product/ProductList.aspx?Submit=ENE&DEPA=0&Order=BESTMATCH&Description=1080&N=-1&isNodeId=1'; //Newegg test link
+	//let url = 'https://www.ebay.com/sch/i.html?_from=R40&_trksid=m570.l1313&_nkw=1080&_sacat=0'; //ebay test link
+	let url = 'https://www.bestbuy.com/site/searchpage.jsp?st=1080&_dyncharset=UTF-8&id=pcat17071&type=page&sc=Global&cp=1&nrp=&sp=&qp=&list=n&af=true&iht=y&usc=All+Categories&ks=960&keys=keys' //bestbuy test link
+
+	
+	request(url, (error, response, html) =>
+	{
+		if(!error && response.statusCode == 200) 
+		{
+			const $ = cheerio.load(html);
+
+			bestbuyRequest($, itemNames, itemPrices, imgUrls, itemUrls); //Simplifying some code into a function above, need to look into shortening more with promises or otherwise
+
+
+			res.render('pages/home',
+		        {
+		         	productNames: itemNames,
+		         	productPrices: itemPrices,  
+		         	imgUrls: imgUrls,
+		         	itemUrls: itemUrls,
+		        });
+		}
+		else
+		{
+			console.log("Error on request" + error);
 			reject(error);	
 		}
 	}) 
@@ -163,6 +244,7 @@ app.get('/', function(req, res)
 	//Actual render
     
 });
+
 
 app.get('/result', function(req,res){
 
