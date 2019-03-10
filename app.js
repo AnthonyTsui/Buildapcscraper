@@ -21,7 +21,7 @@ app.set('view engine','ejs');
 //request('http://reddit.com', (error, response, html) =>
 
 
-function neweggRequest2($, itemNames, itemPrices, imgUrls, itemUrls ){
+function neweggRequest($, itemNames, itemPrices, imgUrls, itemUrls ){
 	$('.item-container').each((i, temp) =>{	//returns names and used(?) prices but will not return actual prices along with link references
 				const itemPrice= $(temp).find('.price-current').text().replace(/\s\s+/g, '');
 				const itemName = $(temp).find('.item-title').text().replace(/\s\s+/g, '');
@@ -54,21 +54,21 @@ function ebayRequest($, itemNames, itemPrices, imgUrls, itemUrls ){
 
 				if(imgUrl == undefined)
 				{
-					console.log("its undefined at index: " + i)
+					//console.log("its undefined at index: " + i)
 					imgUrl = $(temp).find('.s-item__image-img').attr('src');
 				}
 
 
-				const itemUrl = $(temp).find('.s-item__image').attr('href');
+				const itemUrl = $(temp).find('a').attr('href');
 
 				itemNames[i] = itemName;
-				console.log("Logged index " + i + " of itemNames with: " + itemName);
+				//console.log("Logged index " + i + " of itemNames with: " + itemName);
 
 				itemPrices[i] = itemPrice;
-				console.log("Logged index " + i + " of itemPrices with: " + itemPrice);
+				//console.log("Logged index " + i + " of itemPrices with: " + itemPrice);
 
 				imgUrls[i] = imgUrl;
-				console.log("Logged index " + i + " of imgUrls with: " + imgUrl);
+				//console.log("Logged index " + i + " of imgUrls with: " + imgUrl);
 
 				itemUrls[i] = itemUrl;
 				console.log("Logged index " + i + " of itemUrls with: " + itemUrl);
@@ -130,8 +130,8 @@ app.get('/', function(req, res)
 	let itemUrls = [];
 	//Preliminary testing to render data to front end
 
-	//let url = 'https://www.newegg.com/Product/ProductList.aspx?Submit=ENE&DEPA=0&Order=BESTMATCH&Description=1080&N=-1&isNodeId=1'; //Newegg test link
-	let url = 'https://www.ebay.com/sch/i.html?_from=R40&_trksid=m570.l1313&_nkw=1080&_sacat=0'; //ebay test link
+	let url = 'https://www.newegg.com/Product/ProductList.aspx?Submit=ENE&DEPA=0&Order=BESTMATCH&Description=1080&N=-1&isNodeId=1'; //Newegg test link
+	//let url = 'https://www.ebay.com/sch/i.html?_from=R40&_trksid=m570.l1313&_nkw=1080&_sacat=0'; //ebay test link
 
 	
 	request(url, (error, response, html) =>
@@ -140,7 +140,7 @@ app.get('/', function(req, res)
 		{
 			const $ = cheerio.load(html);
 
-			ebayRequest($, itemNames, itemPrices, imgUrls, itemUrls); //Simplifying some code into a function above, need to look into shortening more with promises or otherwise
+			neweggRequest($, itemNames, itemPrices, imgUrls, itemUrls); //Simplifying some code into a function above, need to look into shortening more with promises or otherwise
 
 
 			res.render('pages/home',
