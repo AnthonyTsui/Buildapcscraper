@@ -125,9 +125,21 @@ request(url, {gzip: true}, (error, response, html) =>
 	{
 		if(!error && response.statusCode == 200) 
 		{
-			console.log(html);
-			const $ = cheerio.load(html, {decodeEntities: false});
-			console.log($);
+			//console.log(html);
+			const $ = cheerio.load(html);
+			//console.log($);
+			$('.a-section.a-spacing-medium').each((i, temp) =>{
+			//$('.a-section.aok-relative.s-image-fixed-height').each((i, temp) =>{
+				//console.log(temp);
+				const testImg = $(temp).find('.s-image').attr('src');			//this works for finding image links but returns several undefined
+				//const test = $(temp).children('.s-image');
+
+				//console.log(testImg);
+
+				const testName = $(temp).find('span.a-size-medium.a-color-base.a-text-normal').text();
+				console.log(testName)	
+
+			})
 
 			
 		}
