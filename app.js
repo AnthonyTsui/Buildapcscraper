@@ -137,7 +137,22 @@ request(url, {gzip: true}, (error, response, html) =>
 				//console.log(testImg);
 
 				const testName = $(temp).find('span.a-size-medium.a-color-base.a-text-normal').text();
-				console.log(testName)	
+				//console.log(testName)	
+
+				const testPrice = $(temp).find('span.a-price-whole').eq(0).text();
+				/*
+				if(testPrice.length<=0)
+				{
+					console.log("no price");
+				}
+				else
+					{console.log(testPrice)	};
+				*/
+
+				const testLink = $(temp).find('a.a-link-normal.a-text-normal').eq(0).attr('href');
+				console.log("https://www.amazon.com" + testLink);
+
+				
 
 			})
 
