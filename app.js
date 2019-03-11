@@ -6,6 +6,7 @@ const bodyParser = require('body-parser');
 const request = require('request');
 const cheerio = require('cheerio');
 
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
@@ -80,12 +81,14 @@ function ebayRequest($, itemNames, itemPrices, imgUrls, itemUrls ){
 			console.log("------Finished running request------");
 }
 
-function bestbuyRequest($, itemNames, itemPrices, imgUrls, itemUrls ){
-	$('.sku-item').each((i, temp) =>{	//returns names and used(?) prices but will not return actual prices along with link references
+
+
+function amazonRequest($, itemNames, itemPrices, imgUrls, itemUrls ){
+	$('.sg-col-inner').each((i, temp) =>{	//returns names and used(?) prices but will not return actual prices along with link references
 				//const itemPrice= $(temp).find('.s-item__price').html();	//using .text() returns the current bid price and the buy out price.
 				//const itemName = $(temp).find('.s-item__image-img').attr('alt'); 
-				let imgUrl = $(temp).find('product-image').attr('src');
-				//const itemUrl = $(temp).find('a').attr('href');
+				//const imgUrl = $(temp).find('.s-item__image-img').attr('data-src');
+				const itemUrl = $(temp).find('.a-link-normal').attr('href');
 
 				//itemNames[i] = itemName;
 				//console.log("Logged index " + i + " of itemNames with: " + itemName);
@@ -93,11 +96,13 @@ function bestbuyRequest($, itemNames, itemPrices, imgUrls, itemUrls ){
 				//itemPrices[i] = itemPrice;
 				//console.log("Logged index " + i + " of itemPrices with: " + itemPrice);
 
-				imgUrls[i] = imgUrl;
-				console.log("Logged index " + i + " of imgUrls with: " + imgUrl);
+				//imgUrls[i] = imgUrl;
+				//console.log("Logged index " + i + " of imgUrls with: " + imgUrl);
 
 				//itemUrls[i] = itemUrl;
 				//console.log("Logged index " + i + " of itemUrls with: " + itemUrl);
+
+				console.log(itemUrl);
 
 				
 
@@ -106,46 +111,37 @@ function bestbuyRequest($, itemNames, itemPrices, imgUrls, itemUrls ){
 			console.log("------Finished running request------");
 }
 
-/*
-function ebayRequest2($){
-	$('.s-item').each((i, temp) =>{	//returns names and used(?) prices but will not return actual prices along with link references
 
 
-				const itemPrice= $(temp).find('.s-item__price').html();
-				const itemName = $(temp).find('.s-item__image-img').attr('alt');
-				const imgUrl = $(temp).find('.s-item__image-img').attr('data-src');
-				const itemUrl = $(temp).find('a').attr('href');
+let url = 'https://www.amazon.com/s/?field-keywords=1080';
+//let url = 'https://www.walmart.com/search/?cat_id=0&query=1080';
+let itemNames = [];
+let itemPrices = [];
+let imgUrls = [];
+let itemUrls = [];
 
 
-				//console.log("ebay request 2 item Name: " + itemName);
-				//console.log("ebay request 2 imgURL: " + imgUrl);
-				//console.log("ebay item link: " + itemUrl);
-				//console.log(itemPrice);
-			});
-
-			console.log("------Finished running request------");
-}
-
-
-let url = 'https://www.ebay.com/sch/i.html?_from=R40&_trksid=m570.l1313&_nkw=1080&_sacat=0';
-request(url, (error, response, html) =>
+request(url, {gzip: true}, (error, response, html) =>
 	{
 		if(!error && response.statusCode == 200) 
 		{
-			const $ = cheerio.load(html);
+			console.log(html);
+			const $ = cheerio.load(html, {decodeEntities: false});
+			console.log($);
 
-			//neweggRequest2($, itemNames, itemPrices, imgUrls, itemUrls); //Simplifying some code into a function above, need to look into shortening more with promises or otherwise
-			console.log("Result of scrape: " );
-			ebayRequest2($);
+			
 		}
 		else
 		{
 			console.log("Error on request" + error);
 			reject(error);	
 		}
-	}) 
+	})
 
-*/
+
+
+
+//routes begin below 	-------------------------------------------------------------------------------------------------------------------------
 
 
 app.get('/', function(req, res)
