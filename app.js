@@ -19,11 +19,8 @@ app.set('view engine','ejs');
 
 //Test newegg link: https://www.newegg.com/Product/ProductList.aspx?Submit=ENE&DEPA=0&Order=BESTMATCH&Description=1080&N=-1&isNodeId=1
 
-//request('http://reddit.com', (error, response, html) =>
-
-
 function neweggRequest($, itemNames, itemPrices, imgUrls, itemUrls ){
-	$('.item-container').each((i, temp) =>{	//returns names and used(?) prices but will not return actual prices along with link references
+	$('.item-container').each((i, temp) =>{	
 				const itemPrice= $(temp).find('.price-current').text().replace(/\s\s+/g, '');
 				const itemName = $(temp).find('.item-title').text().replace(/\s\s+/g, '');
 				const imgUrl = $(temp).find('img').attr('src');
@@ -48,7 +45,7 @@ function neweggRequest($, itemNames, itemPrices, imgUrls, itemUrls ){
 
 
 function ebayRequest($, itemNames, itemPrices, imgUrls, itemUrls ){
-	$('.s-item').each((i, temp) =>{	//returns names and used(?) prices but will not return actual prices along with link references
+	$('.s-item').each((i, temp) =>{	
 				const itemPrice= $(temp).find('.s-item__price').html();	//using .text() returns the current bid price and the buy out price.
 				const itemName = $(temp).find('.s-item__image-img').attr('alt'); 
 				let imgUrl = $(temp).find('.s-item__image-img').attr('data-src');
@@ -85,26 +82,45 @@ function ebayRequest($, itemNames, itemPrices, imgUrls, itemUrls ){
 
 function amazonRequest($, itemNames, itemPrices, imgUrls, itemUrls ){
 	$('.sg-col-inner').each((i, temp) =>{	//returns names and used(?) prices but will not return actual prices along with link references
-				//const itemPrice= $(temp).find('.s-item__price').html();	//using .text() returns the current bid price and the buy out price.
-				//const itemName = $(temp).find('.s-item__image-img').attr('alt'); 
-				//const imgUrl = $(temp).find('.s-item__image-img').attr('data-src');
-				const itemUrl = $(temp).find('.a-link-normal').attr('href');
+				$('.a-section.a-spacing-medium').each((i, temp) =>{
+					let itemPrice = $(temp).find('span.a-price-whole').eq(0).text();			
+					const itemName = $(temp).find('span.a-size-medium.a-color-base.a-text-normal').text();
+					const imgUrl = $(temp).find('.s-image').attr('src');			//this works for finding image links but returns several undefined
+					const itemUrl = $(temp).find('a.a-link-normal.a-text-normal').eq(0).attr('href');
+					if(imgUrl != undefined)
+					{
+						//console.log(imgUrl);
+						//console.log(itemName);
+						if(itemPrice != null && itemPrice != '')
+						{
+							//console.log("$"+itemPrice);
+							itemPrice = "$"+itemPrice;
+						}
+						else
+						{
+							console.log("See price on site");
+							itemPrice = "See price on site";
+						}
+						console.log("https://www.amazon.com" + itemUrl);
+					}
+					
+					if(itemUrl != undefined || itemName != '')
+					{
+						itemNames[i] = itemName;
+						console.log("Logged index " + i + " of itemNames with: " + itemName);
 
-				//itemNames[i] = itemName;
-				//console.log("Logged index " + i + " of itemNames with: " + itemName);
+						itemPrices[i] = itemPrice;
+						console.log("Logged index " + i + " of itemPrices with: " + itemPrice);
 
-				//itemPrices[i] = itemPrice;
-				//console.log("Logged index " + i + " of itemPrices with: " + itemPrice);
+						imgUrls[i] = imgUrl;
+						console.log("Logged index " + i + " of imgUrls with: " + imgUrl);
 
-				//imgUrls[i] = imgUrl;
-				//console.log("Logged index " + i + " of imgUrls with: " + imgUrl);
+						itemUrls[i] = itemUrl;
+						console.log("Logged index " + i + " of itemUrls with: " + itemUrl);
+					}
+					
 
-				//itemUrls[i] = itemUrl;
-				//console.log("Logged index " + i + " of itemUrls with: " + itemUrl);
-
-				console.log(itemUrl);
-
-				
+				})
 
 			});
 
@@ -120,7 +136,7 @@ let itemPrices = [];
 let imgUrls = [];
 let itemUrls = [];
 
-
+/*
 request(url, {gzip: true}, (error, response, html) =>
 	{
 		if(!error && response.statusCode == 200) 
@@ -129,34 +145,26 @@ request(url, {gzip: true}, (error, response, html) =>
 			const $ = cheerio.load(html);
 			//console.log($);
 			$('.a-section.a-spacing-medium').each((i, temp) =>{
-			//$('.a-section.aok-relative.s-image-fixed-height').each((i, temp) =>{
-				//console.log(temp);
 				const testImg = $(temp).find('.s-image').attr('src');			//this works for finding image links but returns several undefined
-				//const test = $(temp).children('.s-image');
-
-				//console.log(testImg);
-
 				const testName = $(temp).find('span.a-size-medium.a-color-base.a-text-normal').text();
-				//console.log(testName)	
-
-				const testPrice = $(temp).find('span.a-price-whole').eq(0).text();
-				/*
-				if(testPrice.length<=0)
-				{
-					console.log("no price");
-				}
-				else
-					{console.log(testPrice)	};
-				*/
-
+				const testPrice = $(temp).find('span.a-price-whole').eq(0).text();			
 				const testLink = $(temp).find('a.a-link-normal.a-text-normal').eq(0).attr('href');
-				console.log("https://www.amazon.com" + testLink);
-
-				
-
+				if(testImg != undefined)
+				{
+					console.log(testImg);
+					console.log(testName);
+					if(testPrice != null && testPrice != '')
+					{
+						console.log("$"+testPrice);
+					}
+					else
+					{
+						console.log("See price on site");
+					}
+					console.log("https://www.amazon.com" + testLink);
+				}
 			})
-
-			
+			console.log("Finished running request");
 		}
 		else
 		{
@@ -165,7 +173,7 @@ request(url, {gzip: true}, (error, response, html) =>
 		}
 	})
 
-
+*/
 
 
 //routes begin below 	-------------------------------------------------------------------------------------------------------------------------
@@ -179,16 +187,15 @@ app.get('/', function(req, res)
 	let itemUrls = [];
 	//Preliminary testing to render data to front end
 
-	//let url = 'https://www.newegg.com/Product/ProductList.aspx?Submit=ENE&DEPA=0&Order=BESTMATCH&Description=1080&N=-1&isNodeId=1'; //Newegg test link
+	let url = 'https://www.newegg.com/Product/ProductList.aspx?Submit=ENE&DEPA=0&Order=BESTMATCH&Description=1080&N=-1&isNodeId=1'; //Newegg test link
 	//let url = 'https://www.ebay.com/sch/i.html?_from=R40&_trksid=m570.l1313&_nkw=1080&_sacat=0'; //ebay test link
-	let url = 'https://www.bestbuy.com/site/searchpage.jsp?st=1080&_dyncharset=UTF-8&id=pcat17071&type=page&sc=Global&cp=1&nrp=&sp=&qp=&list=n&af=true&iht=y&usc=All+Categories&ks=960&keys=keys' //bestbuy test link
 	//let url = 'https://www.amazon.com/s?k=1080&ref=nb_sb_noss' // amazon test link
 	 //let url = 'https://www.walmart.com/search/?cat_id=0&query=1080'; // walmart test link
 	 //let url = 'https://www.frys.com/search?search_type=regular&sqxts=1&cat=&query_string=1080%20card&nearbyStoreName=false' //frys test link
 	 //let url = 'https://www.target.com/s?searchTerm=1080' //target test link
 
 	
-	request(url, (error, response, html) =>
+	request(url, {gzip:true}, (error, response, html) =>
 	{
 		if(!error && response.statusCode == 200) 
 		{
@@ -210,6 +217,7 @@ app.get('/', function(req, res)
 			console.log("Error on request" + error);
 			res.render('pages/result',
 		        {
+		        	keyword: null,
 		         	productNames: null,
 		         	productPrices: null,  
 		         	imgUrls: null,
@@ -225,26 +233,21 @@ app.get('/', function(req, res)
 });
 
 
-app.get('/testGet', function(req, res)
+app.get('/resultAmazon', function(req, res)
 {
 	let itemNames = [];
 	let itemPrices = [];
 	let imgUrls = [];
 	let itemUrls = [];
-	//Preliminary testing to render data to front end
-
-	//let url = 'https://www.newegg.com/Product/ProductList.aspx?Submit=ENE&DEPA=0&Order=BESTMATCH&Description=1080&N=-1&isNodeId=1'; //Newegg test link
-	//let url = 'https://www.ebay.com/sch/i.html?_from=R40&_trksid=m570.l1313&_nkw=1080&_sacat=0'; //ebay test link
-	let url = 'https://www.bestbuy.com/site/searchpage.jsp?st=1080&_dyncharset=UTF-8&id=pcat17071&type=page&sc=Global&cp=1&nrp=&sp=&qp=&list=n&af=true&iht=y&usc=All+Categories&ks=960&keys=keys' //bestbuy test link
-
+	let url = 'https://www.amazon.com/s/?field-keywords=1080';
 	
-	request(url, (error, response, html) =>
+	request(url,{gzip:true}, (error, response, html) =>
 	{
 		if(!error && response.statusCode == 200) 
 		{
 			const $ = cheerio.load(html);
 
-			bestbuyRequest($, itemNames, itemPrices, imgUrls, itemUrls); //Simplifying some code into a function above, need to look into shortening more with promises or otherwise
+			amazonRequest($, itemNames, itemPrices, imgUrls, itemUrls); //Simplifying some code into a function above, need to look into shortening more with promises or otherwise
 
 
 			res.render('pages/home',
@@ -291,14 +294,15 @@ app.post('/result', function(req,res){
 	let itemUrls = [];
 
 
-	let url = 'https://www.newegg.com/Product/ProductList.aspx?Submit=ENE&DEPA=0&Order=BESTMATCH&Description='+keyword+'&N=-1&isNodeId=1';
-	request(url, (error, response, html) =>
+	let url = 'https://www.amazon.com/s/?field-keywords=' + keyword;
+	console.log(url);
+	//let url = 'https://www.newegg.com/Product/ProductList.aspx?Submit=ENE&DEPA=0&Order=BESTMATCH&Description='+keyword+'&N=-1&isNodeId=1';
+	request(url,{gzip:true}, (error, response, html) =>
 	{
 		if(!error && response.statusCode == 200) 
 		{
 			const $ = cheerio.load(html);
-			neweggRequest2($, itemNames, itemPrices, imgUrls, itemUrls);
-
+			amazonRequest($, itemNames, itemPrices, imgUrls, itemUrls);
 			res.render('pages/result',
 		        {
 		        	keyword:keyword,
@@ -316,7 +320,6 @@ app.post('/result', function(req,res){
 	})
 });
 
-app.get('/', (req,res) => res.send('Hello World!'))
 
 app.listen(port, () => console.log('App listening on port ${port}!'))
 
