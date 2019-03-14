@@ -1,10 +1,11 @@
 const express = require('express');
-const app = express()
 const port = 8000
 
 const bodyParser = require('body-parser');
 const request = require('request');
 const cheerio = require('cheerio');
+
+const app = express()
 
 
 app.use(bodyParser.json());
@@ -321,6 +322,12 @@ app.post('/result', function(req,res){
 });
 
 
-app.listen(port, () => console.log('App listening on port ${port}!'))
+//app.listen(port, () => console.log('App listening on port ${port}!'))
 
+//require('./server/routes')(app);
 
+app.get('*', (req, res) => res.status(200).send({
+  message: "Uh oh you shouldn't be here.",
+}));
+
+module.exports = app;
