@@ -4,6 +4,7 @@ const port = 8000
 const bodyParser = require('body-parser');
 const request = require('request');
 const cheerio = require('cheerio');
+const logger = require('morgan');
 
 const app = express()
 
