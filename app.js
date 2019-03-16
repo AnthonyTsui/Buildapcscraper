@@ -8,11 +8,13 @@ const logger = require('morgan');
 
 const app = express()
 
-
+app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
 app.set('view engine','ejs');
+
+require('./server/routes')(app);
 
 //Below is testing the newegg website to see what divs can be scraped in order to find the appropriate information
 //It seems div class=item-info is inside a div class=item-container, rather than going through item-info classes, to get url links to the product
