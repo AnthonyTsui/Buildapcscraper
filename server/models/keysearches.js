@@ -5,6 +5,7 @@ module.exports = (sequelize, DataTypes) => {
     title: 
     {
     	type: DataTypes.STRING, 
+    	unique: true,
     },
     itemtype:
     {
@@ -17,7 +18,7 @@ module.exports = (sequelize, DataTypes) => {
     // associations can be defined here
     keysearches.hasMany(models.searchresults,
     {
-        foreignKey: 'searchID',
+        foreignKey: 'searchterm',
         as: 'searchresults',
 
     });

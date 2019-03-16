@@ -29,7 +29,7 @@ module.exports = (sequelize, DataTypes) => {
   searchresults.associate = (models) => {
     // associations can be defined here
     searchresults.belongsTo(models.keysearches, {
-    	foreignKey: 'searchID',
+    	foreignKey: 'searchterm',
     	onDelete: 'CASCADE',
 
     });

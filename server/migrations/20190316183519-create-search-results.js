@@ -35,13 +35,13 @@ module.exports = {
         allowNull: false,
         type: Sequelize.DATE
       },
-      searchID: {
-        type:Sequelize.INTEGER,
+      searchterm: {
+        type:Sequelize.STRING,
         onDelete: 'CASCADE',
         references:{
           model: 'keysearches',
-          key: 'id',
-          as: 'searchID',
+          key: 'title',
+          as: 'searchterm',
         },
       },
     });
