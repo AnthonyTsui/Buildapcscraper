@@ -23,6 +23,10 @@ module.exports = {
       {
         type:Sequelize.STRING,
       },
+      source:
+      {
+        type:Sequelize.STRING,
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE
@@ -35,7 +39,7 @@ module.exports = {
         type:Sequelize.INTEGER,
         onDelete: 'CASCADE',
         references:{
-          model: 'searchresults',
+          model: 'keysearches',
           key: 'id',
           as: 'searchID',
         },
