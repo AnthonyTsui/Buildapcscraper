@@ -1,5 +1,5 @@
 # webscraper-pricechecker
-Attempt to build a price checker of PC parts/ various products with the usage of a web scarper or just interacting with APIs
+Building a price checker of PC parts/ various products with the usage of a web scarper or just interacting with APIs
 
 This app is using the following dependencies:
 * Cheerio v1.0.0-rc.2
