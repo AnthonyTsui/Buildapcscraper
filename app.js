@@ -176,8 +176,8 @@ request(url, {gzip: true}, (error, response, html) =>
 			reject(error);	
 		}
 	})
-
 */
+
 
 
 //routes begin below 	-------------------------------------------------------------------------------------------------------------------------
@@ -307,6 +307,38 @@ app.post('/result', function(req,res){
 		{
 			const $ = cheerio.load(html);
 			amazonRequest($, itemNames, itemPrices, imgUrls, itemUrls);
+			
+
+
+			console.log(itemNames[0], itemPrices[0], imgUrls[0], itemUrls[0]);
+
+			/*
+			request.post({url:'http://localhost:8000/api/keysearches/${keyword}/searchresults', 
+							form: {title: itemNames[0], image: imgUrls[0]  link: itemUrls[0], price: itemPrices[0], source: 'Amazon'}}, function(err, response, body)
+			  {
+			    if(err)
+			    {
+			      console.log("Error on create Userevent request at: ");
+			    }
+			    else
+			    {
+			      console.log("Created userevent entry");
+			    }
+			  });*/
+
+			  request.post({url:'http://localhost:8000/api/keysearches/'+keyword+'/searchresults', 
+			  		form: {title: itemNames[0], image: imgUrls[0],  link: itemUrls[0], price: itemPrices[0], source: 'Amazon'}}, function(err, response, body)
+			  {
+			    if(err)
+			    {
+			      console.log("Error on create SearchResult ");
+			    }
+			    else
+			    {
+			      console.log("Created Search Result");
+			    }
+			  });
+
 			res.render('pages/result',
 		        {
 		        	keyword:keyword,
