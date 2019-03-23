@@ -1,16 +1,20 @@
 const express = require('express');
-const app = express()
 const port = 8000
 
 const bodyParser = require('body-parser');
 const request = require('request');
 const cheerio = require('cheerio');
+const logger = require('morgan');
 
+const app = express()
 
+app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
 app.set('view engine','ejs');
+
+require('./server/routes')(app);
 
 //Below is testing the newegg website to see what divs can be scraped in order to find the appropriate information
 //It seems div class=item-info is inside a div class=item-container, rather than going through item-info classes, to get url links to the product
@@ -172,8 +176,8 @@ request(url, {gzip: true}, (error, response, html) =>
 			reject(error);	
 		}
 	})
-
 */
+
 
 
 //routes begin below 	-------------------------------------------------------------------------------------------------------------------------
@@ -303,6 +307,38 @@ app.post('/result', function(req,res){
 		{
 			const $ = cheerio.load(html);
 			amazonRequest($, itemNames, itemPrices, imgUrls, itemUrls);
+			
+
+
+			console.log(itemNames[0], itemPrices[0], imgUrls[0], itemUrls[0]);
+
+			/*
+			request.post({url:'http://localhost:8000/api/keysearches/${keyword}/searchresults', 
+							form: {title: itemNames[0], image: imgUrls[0]  link: itemUrls[0], price: itemPrices[0], source: 'Amazon'}}, function(err, response, body)
+			  {
+			    if(err)
+			    {
+			      console.log("Error on create Userevent request at: ");
+			    }
+			    else
+			    {
+			      console.log("Created userevent entry");
+			    }
+			  });*/
+
+			  request.post({url:'http://localhost:8000/api/keysearches/'+keyword+'/searchresults', 
+			  		form: {title: itemNames[0], image: imgUrls[0],  link: itemUrls[0], price: itemPrices[0], source: 'Amazon'}}, function(err, response, body)
+			  {
+			    if(err)
+			    {
+			      console.log("Error on create SearchResult ");
+			    }
+			    else
+			    {
+			      console.log("Created Search Result");
+			    }
+			  });
+
 			res.render('pages/result',
 		        {
 		        	keyword:keyword,
@@ -321,6 +357,12 @@ app.post('/result', function(req,res){
 });
 
 
-app.listen(port, () => console.log('App listening on port ${port}!'))
+//app.listen(port, () => console.log('App listening on port ${port}!'))
 
+//require('./server/routes')(app);
 
+app.get('*', (req, res) => res.status(200).send({
+  message: "Uh oh you shouldn't be here.",
+}));
+
+module.exports = app;
