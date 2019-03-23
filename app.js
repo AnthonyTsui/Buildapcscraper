@@ -5,6 +5,7 @@ const bodyParser = require('body-parser');
 const request = require('request');
 const cheerio = require('cheerio');
 const logger = require('morgan');
+const axios = require('axios');
 
 const app = express()
 
@@ -191,14 +192,14 @@ app.get('/', function(req, res)
 	let itemUrls = [];
 	//Preliminary testing to render data to front end
 
-	let url = 'https://www.newegg.com/Product/ProductList.aspx?Submit=ENE&DEPA=0&Order=BESTMATCH&Description=1080&N=-1&isNodeId=1'; //Newegg test link
+	//let url = 'https://www.newegg.com/Product/ProductList.aspx?Submit=ENE&DEPA=0&Order=BESTMATCH&Description=1080&N=-1&isNodeId=1'; //Newegg test link
 	//let url = 'https://www.ebay.com/sch/i.html?_from=R40&_trksid=m570.l1313&_nkw=1080&_sacat=0'; //ebay test link
-	//let url = 'https://www.amazon.com/s?k=1080&ref=nb_sb_noss' // amazon test link
+	let url = 'https://www.amazon.com/s?k=1080&ref=nb_sb_noss' // amazon test link
 	 //let url = 'https://www.walmart.com/search/?cat_id=0&query=1080'; // walmart test link
 	 //let url = 'https://www.frys.com/search?search_type=regular&sqxts=1&cat=&query_string=1080%20card&nearbyStoreName=false' //frys test link
 	 //let url = 'https://www.target.com/s?searchTerm=1080' //target test link
 
-	
+	/*
 	request(url, {gzip:true}, (error, response, html) =>
 	{
 		if(!error && response.statusCode == 200) 
@@ -228,7 +229,36 @@ app.get('/', function(req, res)
 		         	itemUrls: null,
 		        });
 		}
-	}) 
+	}) */
+
+	axios.get(url)
+		.then((response) => {
+			if(response.status === 200) {
+				const html = response.data;
+				const $ = cheerio.load(html);
+				amazonRequest($, itemNames, itemPrices, imgUrls, itemUrls); //Simplifying some code into a function above, need to look into shortening more with promises or otherwise
+
+
+				res.render('pages/home',
+			        {
+			         	productNames: itemNames,
+			         	productPrices: itemPrices,  
+			         	imgUrls: imgUrls,
+			         	itemUrls: itemUrls,
+			        });
+			}
+
+		}, (error) => {console.log("Error on request" + error);
+				res.render('pages/result',
+			        {
+			        	keyword: null,
+			         	productNames: null,
+			         	productPrices: null,  
+			         	imgUrls: null,
+			         	itemUrls: null,
+			        });
+
+		});
 	
 
 
@@ -301,6 +331,7 @@ app.post('/result', function(req,res){
 	let url = 'https://www.amazon.com/s/?field-keywords=' + keyword;
 	console.log(url);
 	//let url = 'https://www.newegg.com/Product/ProductList.aspx?Submit=ENE&DEPA=0&Order=BESTMATCH&Description='+keyword+'&N=-1&isNodeId=1';
+	/*
 	request(url,{gzip:true}, (error, response, html) =>
 	{
 		if(!error && response.statusCode == 200) 
@@ -311,20 +342,6 @@ app.post('/result', function(req,res){
 
 
 			console.log(itemNames[0], itemPrices[0], imgUrls[0], itemUrls[0]);
-
-			/*
-			request.post({url:'http://localhost:8000/api/keysearches/${keyword}/searchresults', 
-							form: {title: itemNames[0], image: imgUrls[0]  link: itemUrls[0], price: itemPrices[0], source: 'Amazon'}}, function(err, response, body)
-			  {
-			    if(err)
-			    {
-			      console.log("Error on create Userevent request at: ");
-			    }
-			    else
-			    {
-			      console.log("Created userevent entry");
-			    }
-			  });*/
 
 			  request.post({url:'http://localhost:8000/api/keysearches/'+keyword+'/searchresults', 
 			  		form: {title: itemNames[0], image: imgUrls[0],  link: itemUrls[0], price: itemPrices[0], source: 'Amazon'}}, function(err, response, body)
@@ -353,7 +370,96 @@ app.post('/result', function(req,res){
 			console.log("Error on request" + error);
 			reject(error);	
 		}
-	})
+	})*/
+
+	//Axios implementation below ----------------------------
+
+	axios.get(url)
+		.then((response) => {
+			if(response.status === 200 || response.status === 201) {
+				const html = response.data;
+				const $ = cheerio.load(html);
+				amazonRequest($, itemNames, itemPrices, imgUrls, itemUrls); //Simplifying some code into a function above, need to look into shortening more with promises or otherwise
+
+
+				console.log(itemNames[0], itemPrices[0], imgUrls[0], itemUrls[0]);
+				/*
+
+				  request.post({url:'http://localhost:8000/api/keysearches/'+keyword+'/searchresults', 
+				  		form: {title: itemNames[0], image: imgUrls[0],  link: itemUrls[0], price: itemPrices[0], source: 'Amazon'}}, function(err, response, body)
+							  {
+							    if(err)
+							    {
+							      console.log("Error on create SearchResult ");
+							    }
+							    else
+							    {
+							      console.log("Created Search Result");
+							    }
+							  }); 
+				*/
+				for( var i = 0; i < itemNames.length; i++)
+				{
+					axios.post('http://localhost:8000/api/keysearches/'+keyword+'/searchresults',{
+					title: itemNames[i],
+					image: imgUrls[i],
+					link: itemUrls[i],
+					price: itemPrices[i],
+					source: 'Amazon'
+					})
+
+				}
+				res.render('pages/result',
+					        {
+					        	keyword:keyword,
+					         	productNames: itemNames,
+					         	productPrices: itemPrices,  
+					         	imgUrls: imgUrls,
+					         	itemUrls: itemUrls,
+					        });
+
+
+				/*
+				.then((response)=> {
+					if(response.status === 200 || response.status === 201){
+						console.log("success on search results");
+						res.render('pages/result',
+					        {
+					        	keyword:keyword,
+					         	productNames: itemNames,
+					         	productPrices: itemPrices,  
+					         	imgUrls: imgUrls,
+					         	itemUrls: itemUrls,
+					        });
+					}
+				}, (error) => {console.log("Errror on creating search results" + error)
+					res.render('pages/result',
+			        {
+			        	keyword: null,
+			         	productNames: null,
+			         	productPrices: null,  
+			         	imgUrls: null,
+			         	itemUrls: null,
+			        });
+
+
+				});*/
+
+				
+			}
+
+		}, (error) => {console.log("Error on request" + error);
+				res.render('pages/result',
+			        {
+			        	keyword: null,
+			         	productNames: null,
+			         	productPrices: null,  
+			         	imgUrls: null,
+			         	itemUrls: null,
+			        });
+
+		});
+	
 });
 
 
