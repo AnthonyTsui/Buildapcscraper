@@ -308,7 +308,7 @@ app.get('/resultAmazon', function(req, res)
 
 app.get('/search', function(req,res){
 
-	res.render('pages/result',
+	res.render('pages/search',
 	{	
 		keyword:null,
 		productNames: null,
@@ -324,8 +324,43 @@ app.post('/search', function(req,res){
 	let itemPrices = [];
 	let imgUrls = [];
 	let itemUrls = [];
+	let source = [];
+	let url = 'http://localhost:8000/api/searchresults/' + keyword;
 
-	axios.post('http://localhost:8000/api/searchresults/'+keyword)
+	axios.post(url)
+		.then((response) => {
+			if(response.status === 200) {
+				console.log(response.data.length);
+				for(let i = 0; i < response.data.length; i++){
+					itemNames[i] = response.data[i].title;
+					itemPrices[i] = response.data[i].price;
+					imgUrls[i] = response.data[i].image;
+					itemUrls[i] = 'https://www.amazon.com'+response.data[i].link;
+					source[i] = response.data[i].source;
+				}
+				res.render('pages/search',
+			        {
+			        	keyword:keyword,
+			         	productNames: itemNames,
+			         	productPrices: itemPrices,  
+			         	imgUrls: imgUrls,
+			         	itemUrls: itemUrls,
+			         	source: source,
+			        });
+			}
+
+		}, (error) => {console.log("Error on request" + error);
+				res.render('pages/search',
+			        {
+			        	keyword: null,
+			         	productNames: null,
+			         	productPrices: null,  
+			         	imgUrls: null,
+			         	itemUrls: null,
+			         	source: null,
+			        });
+
+		});
 
 	
 });
