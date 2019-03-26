@@ -306,6 +306,30 @@ app.get('/resultAmazon', function(req, res)
 });
 
 
+app.get('/search', function(req,res){
+
+	res.render('pages/result',
+	{	
+		keyword:null,
+		productNames: null,
+		productPrices: null,
+		imgUrls: null,
+		itemUrls: null,
+	});
+});
+
+app.post('/search', function(req,res){
+	let keyword = req.body.keyword;
+	let itemNames = [];
+	let itemPrices = [];
+	let imgUrls = [];
+	let itemUrls = [];
+
+	axios.post('http://localhost:8000/api/searchresults/'+keyword)
+
+	
+});
+
 app.get('/result', function(req,res){
 
 	res.render('pages/result',
