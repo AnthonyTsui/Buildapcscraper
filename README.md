@@ -6,6 +6,7 @@ This app is using the following dependencies:
 * Express v4.16.4
 * ejs v2.6.1
 * Body-Parser v1.18.3
-* Request v2.88.0
-
+* Morgan v1.9.1
+* Sequelize v5.1.0
+* Axios v0.18.0
 	
