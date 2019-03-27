@@ -162,50 +162,7 @@ function amazonRequest($, itemNames, itemPrices, imgUrls, itemUrls, itemSource )
 
 
 
-let url = 'https://www.amazon.com/s/?field-keywords=1080';
-//let url = 'https://www.walmart.com/search/?cat_id=0&query=1080';
-let itemNames = [];
-let itemPrices = [];
-let imgUrls = [];
-let itemUrls = [];
 
-/*
-request(url, {gzip: true}, (error, response, html) =>
-	{
-		if(!error && response.statusCode == 200) 
-		{
-			//console.log(html);
-			const $ = cheerio.load(html);
-			//console.log($);
-			$('.a-section.a-spacing-medium').each((i, temp) =>{
-				const testImg = $(temp).find('.s-image').attr('src');			//this works for finding image links but returns several undefined
-				const testName = $(temp).find('span.a-size-medium.a-color-base.a-text-normal').text();
-				const testPrice = $(temp).find('span.a-price-whole').eq(0).text();			
-				const testLink = $(temp).find('a.a-link-normal.a-text-normal').eq(0).attr('href');
-				if(testImg != undefined)
-				{
-					console.log(testImg);
-					console.log(testName);
-					if(testPrice != null && testPrice != '')
-					{
-						console.log("$"+testPrice);
-					}
-					else
-					{
-						console.log("See price on site");
-					}
-					console.log("https://www.amazon.com" + testLink);
-				}
-			})
-			console.log("Finished running request");
-		}
-		else
-		{
-			console.log("Error on request" + error);
-			reject(error);	
-		}
-	})
-*/
 
 
 
@@ -289,51 +246,10 @@ app.get('/', function(req, res)
 			        });
 
 		});
-	
-
-
-	//Actual render
     
 });
 
 
-app.get('/resultAmazon', function(req, res)
-{
-	let itemNames = [];
-	let itemPrices = [];
-	let imgUrls = [];
-	let itemUrls = [];
-	let url = 'https://www.amazon.com/s/?field-keywords=1080';
-	
-	request(url,{gzip:true}, (error, response, html) =>
-	{
-		if(!error && response.statusCode == 200) 
-		{
-			const $ = cheerio.load(html);
-
-			amazonRequest($, itemNames, itemPrices, imgUrls, itemUrls); //Simplifying some code into a function above, need to look into shortening more with promises or otherwise
-
-
-			res.render('pages/home',
-		        {
-		         	productNames: itemNames,
-		         	productPrices: itemPrices,  
-		         	imgUrls: imgUrls,
-		         	itemUrls: itemUrls,
-		        });
-		}
-		else
-		{
-			console.log("Error on request" + error);
-			reject(error);	
-		}
-	}) 
-	
-
-
-	//Actual render
-    
-});
 
 
 app.get('/search', function(req,res){
@@ -347,6 +263,7 @@ app.get('/search', function(req,res){
 		itemUrls: null,
 	});
 });
+
 
 app.post('/search', function(req,res){
 	let keyword = req.body.keyword;
@@ -456,6 +373,12 @@ app.post('/result', function(req,res){
 					price: itemPrices[i],
 					source: itemSource[i],
 					})
+					.then(response => response.data)
+					.catch(error => {
+						if(error.response){
+							console.log("Error code: " + error.response);
+						}
+					});
 
 				}
 
@@ -486,82 +409,6 @@ app.post('/result', function(req,res){
 		}));
 	});
 
-/*
-
-
-	axios.get(amazonurl)
-		.then((response) => {
-			if(response.status === 200 || response.status === 201) {
-				const html = response.data;
-				const $ = cheerio.load(html);
-				amazonRequest($, itemNames, itemPrices, imgUrls, itemUrls); //Simplifying some code into a function above, need to look into shortening more with promises or otherwise
-
-
-				console.log(itemNames[0], itemPrices[0], imgUrls[0], itemUrls[0]);
-
-				for( var i = 0; i < itemNames.length; i++)
-				{
-					axios.post('http://localhost:8000/api/keysearches/'+keyword+'/searchresults',{
-					title: itemNames[i],
-					image: imgUrls[i],
-					link: itemUrls[i],
-					price: itemPrices[i],
-					source: 'Amazon'
-					})
-
-				}
-				res.render('pages/result',
-					        {
-					        	keyword:keyword,
-					         	productNames: itemNames,
-					         	productPrices: itemPrices,  
-					         	imgUrls: imgUrls,
-					         	itemUrls: itemUrls,
-					        });
-
-
-				
-				.then((response)=> {
-					if(response.status === 200 || response.status === 201){
-						console.log("success on search results");
-						res.render('pages/result',
-					        {
-					        	keyword:keyword,
-					         	productNames: itemNames,
-					         	productPrices: itemPrices,  
-					         	imgUrls: imgUrls,
-					         	itemUrls: itemUrls,
-					        });
-					}
-				}, (error) => {console.log("Errror on creating search results" + error)
-					res.render('pages/result',
-			        {
-			        	keyword: null,
-			         	productNames: null,
-			         	productPrices: null,  
-			         	imgUrls: null,
-			         	itemUrls: null,
-			        });
-
-
-				});
-
-				
-			}
-
-		}, (error) => {console.log("Error on request" + error);
-				res.render('pages/result',
-			        {
-			        	keyword: null,
-			         	productNames: null,
-			         	productPrices: null,  
-			         	imgUrls: null,
-			         	itemUrls: null,
-			        });
-
-		});
-	
-});*/
 
 
 //app.listen(port, () => console.log('App listening on port ${port}!'))
