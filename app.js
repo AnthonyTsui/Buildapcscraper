@@ -24,12 +24,14 @@ require('./server/routes')(app);
 
 //Test newegg link: https://www.newegg.com/Product/ProductList.aspx?Submit=ENE&DEPA=0&Order=BESTMATCH&Description=1080&N=-1&isNodeId=1
 
-function neweggRequest($, itemNames, itemPrices, imgUrls, itemUrls ){
+function neweggRequest($, itemNames, itemPrices, imgUrls, itemUrls, itemSource ){
 	$('.item-container').each((i, temp) =>{	
 				const itemPrice= $(temp).find('.price-current').text().replace(/\s\s+/g, '');
 				const itemName = $(temp).find('.item-title').text().replace(/\s\s+/g, '');
 				const imgUrl = $(temp).find('img').attr('src');
 				const itemUrl = $(temp).find('a').attr('href');
+
+				/*
 
 				itemNames[i] = itemName;
 				console.log("Logged index " + i + " of itemNames with: " + itemName);
@@ -42,6 +44,17 @@ function neweggRequest($, itemNames, itemPrices, imgUrls, itemUrls ){
 
 				itemUrls[i] = itemUrl;
 				console.log("Logged index " + i + " of imgUrls with: " + itemUrl);
+				*/
+
+				itemNames.push(itemName);
+
+				itemPrices.push(itemPrice);
+
+				imgUrls.push(imgUrl);
+
+				itemUrls.push(itemUrl);
+
+				itemSource.push("Newegg");
 
 			});
 
@@ -49,7 +62,7 @@ function neweggRequest($, itemNames, itemPrices, imgUrls, itemUrls ){
 }
 
 
-function ebayRequest($, itemNames, itemPrices, imgUrls, itemUrls ){
+function ebayRequest($, itemNames, itemPrices, imgUrls, itemUrls, itemSource ){
 	$('.s-item').each((i, temp) =>{	
 				const itemPrice= $(temp).find('.s-item__price').html();	//using .text() returns the current bid price and the buy out price.
 				const itemName = $(temp).find('.s-item__image-img').attr('alt'); 
@@ -64,6 +77,7 @@ function ebayRequest($, itemNames, itemPrices, imgUrls, itemUrls ){
 
 				const itemUrl = $(temp).find('a').attr('href');
 
+				/*
 				itemNames[i] = itemName;
 				//console.log("Logged index " + i + " of itemNames with: " + itemName);
 
@@ -75,6 +89,18 @@ function ebayRequest($, itemNames, itemPrices, imgUrls, itemUrls ){
 
 				itemUrls[i] = itemUrl;
 				console.log("Logged index " + i + " of itemUrls with: " + itemUrl);
+				*/
+
+
+				itemNames.push(itemName);
+
+				itemPrices.push(itemPrice);
+
+				imgUrls.push(imgUrl);
+
+				itemUrls.push(itemUrl);
+
+				itemSource.push("ebay");
 
 				
 
@@ -85,7 +111,7 @@ function ebayRequest($, itemNames, itemPrices, imgUrls, itemUrls ){
 
 
 
-function amazonRequest($, itemNames, itemPrices, imgUrls, itemUrls ){
+function amazonRequest($, itemNames, itemPrices, imgUrls, itemUrls, itemSource ){
 	$('.sg-col-inner').each((i, temp) =>{	//returns names and used(?) prices but will not return actual prices along with link references
 				$('.a-section.a-spacing-medium').each((i, temp) =>{
 					let itemPrice = $(temp).find('span.a-price-whole').eq(0).text();			
@@ -111,17 +137,19 @@ function amazonRequest($, itemNames, itemPrices, imgUrls, itemUrls ){
 					
 					if(itemUrl != undefined || itemName != '')
 					{
-						itemNames[i] = itemName;
+						itemNames.push(itemName);
 						console.log("Logged index " + i + " of itemNames with: " + itemName);
 
-						itemPrices[i] = itemPrice;
+						itemPrices.push(itemPrice);
 						console.log("Logged index " + i + " of itemPrices with: " + itemPrice);
 
-						imgUrls[i] = imgUrl;
+						imgUrls.push(imgUrl);
 						console.log("Logged index " + i + " of imgUrls with: " + imgUrl);
 
-						itemUrls[i] = itemUrl;
+						itemUrls.push(itemUrl);
 						console.log("Logged index " + i + " of itemUrls with: " + itemUrl);
+
+						itemSource.push("amazon");
 					}
 					
 
@@ -190,6 +218,7 @@ app.get('/', function(req, res)
 	let itemPrices = [];
 	let imgUrls = [];
 	let itemUrls = [];
+	let itemSource = [];
 	//Preliminary testing to render data to front end
 
 	//let url = 'https://www.newegg.com/Product/ProductList.aspx?Submit=ENE&DEPA=0&Order=BESTMATCH&Description=1080&N=-1&isNodeId=1'; //Newegg test link
@@ -236,11 +265,12 @@ app.get('/', function(req, res)
 			if(response.status === 200) {
 				const html = response.data;
 				const $ = cheerio.load(html);
-				amazonRequest($, itemNames, itemPrices, imgUrls, itemUrls); //Simplifying some code into a function above, need to look into shortening more with promises or otherwise
+				amazonRequest($, itemNames, itemPrices, imgUrls, itemUrls, itemSource); //Simplifying some code into a function above, need to look into shortening more with promises or otherwise
 
 
 				res.render('pages/home',
 			        {
+			        	keyword: null,
 			         	productNames: itemNames,
 			         	productPrices: itemPrices,  
 			         	imgUrls: imgUrls,
@@ -335,7 +365,15 @@ app.post('/search', function(req,res){
 					itemNames[i] = response.data[i].title;
 					itemPrices[i] = response.data[i].price;
 					imgUrls[i] = response.data[i].image;
-					itemUrls[i] = 'https://www.amazon.com'+response.data[i].link;
+					if(response.data[i].source == 'amazon' || response.data[i].source == 'Amazon')
+					{
+						itemUrls[i] = 'https://www.amazon.com'+response.data[i].link;
+					}
+					else
+					{
+						itemUrls[i] = response.data[i].link;
+					}
+					
 					source[i] = response.data[i].source;
 				}
 				res.render('pages/search',
@@ -385,55 +423,73 @@ app.post('/result', function(req,res){
 	let itemPrices = [];
 	let imgUrls = [];
 	let itemUrls = [];
+	let itemSource = [];
 
 
-	let url = 'https://www.amazon.com/s/?field-keywords=' + keyword;
-	console.log(url);
-	//let url = 'https://www.newegg.com/Product/ProductList.aspx?Submit=ENE&DEPA=0&Order=BESTMATCH&Description='+keyword+'&N=-1&isNodeId=1';
-	/*
-	request(url,{gzip:true}, (error, response, html) =>
-	{
-		if(!error && response.statusCode == 200) 
-		{
-			const $ = cheerio.load(html);
-			amazonRequest($, itemNames, itemPrices, imgUrls, itemUrls);
-			
-
-
-			console.log(itemNames[0], itemPrices[0], imgUrls[0], itemUrls[0]);
-
-			  request.post({url:'http://localhost:8000/api/keysearches/'+keyword+'/searchresults', 
-			  		form: {title: itemNames[0], image: imgUrls[0],  link: itemUrls[0], price: itemPrices[0], source: 'Amazon'}}, function(err, response, body)
-			  {
-			    if(err)
-			    {
-			      console.log("Error on create SearchResult ");
-			    }
-			    else
-			    {
-			      console.log("Created Search Result");
-			    }
-			  });
-
-			res.render('pages/result',
-		        {
-		        	keyword:keyword,
-		         	productNames: itemNames,
-		         	productPrices: itemPrices,  
-		         	imgUrls: imgUrls,
-		         	itemUrls: itemUrls,
-		        });
-		}
-		else
-		{
-			console.log("Error on request" + error);
-			reject(error);	
-		}
-	})*/
+	let amazonurl = 'https://www.amazon.com/s/?field-keywords=' + keyword;
+	console.log(amazonurl);
+	let neweggurl = 'https://www.newegg.com/Product/ProductList.aspx?Submit=ENE&DEPA=0&Order=BESTMATCH&Description='+keyword+'&N=-1&isNodeId=1';
+	console.log(neweggurl);
 
 	//Axios implementation below ----------------------------
 
-	axios.get(url)
+	axios.all([axios.get(amazonurl), axios.get(neweggurl)])
+		.then(axios.spread((amazonres, neweggres) =>{
+			console.log("Before amazon res");
+			let html = amazonres.data;
+			let $ = cheerio.load(html);
+			amazonRequest($, itemNames, itemPrices, imgUrls, itemUrls, itemSource);
+
+			console.log(itemNames[0], itemPrices[0], imgUrls[0], itemUrls[0]);
+
+			console.log("Before neweggres");
+			html = neweggres.data;
+			$ = cheerio.load(html);
+			neweggRequest($, itemNames, itemPrices, imgUrls, itemUrls, itemSource);
+
+			for( var i = 0; i < itemNames.length; i++)
+				{
+					axios.post('http://localhost:8000/api/keysearches/'+keyword+'/searchresults',{
+					title: itemNames[i],
+					image: imgUrls[i],
+					link: itemUrls[i],
+					price: itemPrices[i],
+					source: itemSource[i],
+					})
+
+				}
+
+			console.log("Done, we're gonna load now");
+			res.render('pages/result',
+					        {
+					        	keyword:keyword,
+					         	productNames: itemNames,
+					         	productPrices: itemPrices,  
+					         	imgUrls: imgUrls,
+					         	itemUrls: itemUrls,
+					        });
+
+
+
+
+		}
+		, (error) => {console.log("Error on request" + error);
+				res.render('pages/result',
+			        {
+			        	keyword: null,
+			         	productNames: null,
+			         	productPrices: null,  
+			         	imgUrls: null,
+			         	itemUrls: null,
+			        });
+
+		}));
+	});
+
+/*
+
+
+	axios.get(amazonurl)
 		.then((response) => {
 			if(response.status === 200 || response.status === 201) {
 				const html = response.data;
@@ -442,21 +498,7 @@ app.post('/result', function(req,res){
 
 
 				console.log(itemNames[0], itemPrices[0], imgUrls[0], itemUrls[0]);
-				/*
 
-				  request.post({url:'http://localhost:8000/api/keysearches/'+keyword+'/searchresults', 
-				  		form: {title: itemNames[0], image: imgUrls[0],  link: itemUrls[0], price: itemPrices[0], source: 'Amazon'}}, function(err, response, body)
-							  {
-							    if(err)
-							    {
-							      console.log("Error on create SearchResult ");
-							    }
-							    else
-							    {
-							      console.log("Created Search Result");
-							    }
-							  }); 
-				*/
 				for( var i = 0; i < itemNames.length; i++)
 				{
 					axios.post('http://localhost:8000/api/keysearches/'+keyword+'/searchresults',{
@@ -478,7 +520,7 @@ app.post('/result', function(req,res){
 					        });
 
 
-				/*
+				
 				.then((response)=> {
 					if(response.status === 200 || response.status === 201){
 						console.log("success on search results");
@@ -502,7 +544,7 @@ app.post('/result', function(req,res){
 			        });
 
 
-				});*/
+				});
 
 				
 			}
@@ -519,7 +561,7 @@ app.post('/result', function(req,res){
 
 		});
 	
-});
+});*/
 
 
 //app.listen(port, () => console.log('App listening on port ${port}!'))
