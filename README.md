@@ -1,8 +1,11 @@
 # webscraper-pricechecker
 Building a price checker of PC parts/ various products with the usage of a web scarper or just interacting with APIs.
-Database updates/creations will be done with node-cron, actual searching will be querying the results in the database.
 
-Using Postgres as a database.
+Database updates/creations will be done with node-cron or another similar module, actual searching will be querying the results in the database. Front end will be built with React with Postgres as the database.
+
+No plans for users or sessions at the moment.
+
+
 This app is using the following dependencies:
 * Cheerio v1.0.0-rc.2
 * Express v4.16.4
