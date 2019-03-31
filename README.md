@@ -1,5 +1,6 @@
 # webscraper-pricechecker
 Building a price checker of PC parts/ various products with the usage of a web scarper or just interacting with APIs.
+Current sites being used/scraped are: Amazon, Ebay, Newegg. (Potentially) other sites: Fry's, Microcenter
 
 Database updates/creations will be done with node-cron or another similar module, actual searching will be querying the results in the database. Front end will be built with React with Postgres as the database.
 
