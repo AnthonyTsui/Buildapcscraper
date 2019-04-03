@@ -185,44 +185,8 @@ app.get('/', function(req, res)
 	let itemSource = [];
 	//Preliminary testing to render data to front end
 
-	//let url = 'https://www.newegg.com/Product/ProductList.aspx?Submit=ENE&DEPA=0&Order=BESTMATCH&Description=1080&N=-1&isNodeId=1'; //Newegg test link
-	//let url = 'https://www.ebay.com/sch/i.html?_from=R40&_trksid=m570.l1313&_nkw=1080&_sacat=0'; //ebay test link
 	let url = 'https://www.amazon.com/s?k=1080&ref=nb_sb_noss' // amazon test link
-	 //let url = 'https://www.walmart.com/search/?cat_id=0&query=1080'; // walmart test link
-	 //let url = 'https://www.frys.com/search?search_type=regular&sqxts=1&cat=&query_string=1080%20card&nearbyStoreName=false' //frys test link
-	 //let url = 'https://www.target.com/s?searchTerm=1080' //target test link
-
-	/*
-	request(url, {gzip:true}, (error, response, html) =>
-	{
-		if(!error && response.statusCode == 200) 
-		{
-			const $ = cheerio.load(html);
-
-			neweggRequest($, itemNames, itemPrices, imgUrls, itemUrls); //Simplifying some code into a function above, need to look into shortening more with promises or otherwise
-
-
-			res.render('pages/home',
-		        {
-		         	productNames: itemNames,
-		         	productPrices: itemPrices,  
-		         	imgUrls: imgUrls,
-		         	itemUrls: itemUrls,
-		        });
-		}
-		else
-		{
-			console.log("Error on request" + error);
-			res.render('pages/result',
-		        {
-		        	keyword: null,
-		         	productNames: null,
-		         	productPrices: null,  
-		         	imgUrls: null,
-		         	itemUrls: null,
-		        });
-		}
-	}) */
+	
 
 	axios.get(url)
 		.then((response) => {
