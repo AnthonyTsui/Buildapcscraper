@@ -112,45 +112,52 @@ function ebayRequest($, itemNames, itemPrices, imgUrls, itemUrls, itemSource ){
 
 
 function amazonRequest($, itemNames, itemPrices, imgUrls, itemUrls, itemSource ){
+	let counter = 0;
 	$('.sg-col-inner').each((i, temp) =>{	//returns names and used(?) prices but will not return actual prices along with link references
 				$('.a-section.a-spacing-medium').each((i, temp) =>{
 					let itemPrice = $(temp).find('span.a-price-whole').eq(0).text();			
 					const itemName = $(temp).find('span.a-size-medium.a-color-base.a-text-normal').text();
 					const imgUrl = $(temp).find('.s-image').attr('src');			//this works for finding image links but returns several undefined
 					const itemUrl = $(temp).find('a.a-link-normal.a-text-normal').eq(0).attr('href');
-					if(imgUrl != undefined)
-					{
-						//console.log(imgUrl);
-						//console.log(itemName);
-						if(itemPrice != null && itemPrice != '')
+					console.log("Index for amazon is: " + counter);
+					counter += 1;
+					if(counter <= 100){
+						if(imgUrl != undefined)
 						{
-							//console.log("$"+itemPrice);
-							itemPrice = "$"+itemPrice;
+							//console.log(imgUrl);
+							//console.log(itemName);
+							if(itemPrice != null && itemPrice != '')
+							{
+								//console.log("$"+itemPrice);
+								itemPrice = "$"+itemPrice;
+							}
+							else
+							{
+								console.log("See price on site");
+								itemPrice = "See price on site";
+							}
+							console.log("https://www.amazon.com" + itemUrl);
 						}
-						else
+					
+						if(itemUrl != undefined || itemName != '')
 						{
-							console.log("See price on site");
-							itemPrice = "See price on site";
+							itemNames.push(itemName);
+							//console.log("Logged index " + i + " of itemNames with: " + itemName);
+
+							itemPrices.push(itemPrice);
+							//console.log("Logged index " + i + " of itemPrices with: " + itemPrice);
+
+							imgUrls.push(imgUrl);
+							//console.log("Logged index " + i + " of imgUrls with: " + imgUrl);
+
+							itemUrls.push(itemUrl);
+							//console.log("Logged index " + i + " of itemUrls with: " + itemUrl);
+
+							itemSource.push("amazon");
 						}
-						console.log("https://www.amazon.com" + itemUrl);
+
 					}
 					
-					if(itemUrl != undefined || itemName != '')
-					{
-						itemNames.push(itemName);
-						console.log("Logged index " + i + " of itemNames with: " + itemName);
-
-						itemPrices.push(itemPrice);
-						console.log("Logged index " + i + " of itemPrices with: " + itemPrice);
-
-						imgUrls.push(imgUrl);
-						console.log("Logged index " + i + " of imgUrls with: " + imgUrl);
-
-						itemUrls.push(itemUrl);
-						console.log("Logged index " + i + " of itemUrls with: " + itemUrl);
-
-						itemSource.push("amazon");
-					}
 					
 
 				})
@@ -368,6 +375,7 @@ app.post('/result', function(req,res){
 			html = ebayres.data;
 			$ = cheerio.load(html);
 			ebayRequest($, itemNames, itemPrices, imgUrls, itemUrls, itemSource);
+			/*
 
 			for( var i = 0; i < itemNames.length; i++)
 				{
@@ -385,7 +393,29 @@ app.post('/result', function(req,res){
 						}
 					});
 
+				}*/
+
+			const start = async() => {
+				for( var i = 0; i < itemNames.length; i++){
+					await axios.post('http://localhost:8000/api/keysearches/'+keyword+'/searchresults',{
+					title: itemNames[i],
+					image: imgUrls[i],
+					link: itemUrls[i],
+					price: itemPrices[i],
+					source: itemSource[i],
+					})
+					.then(response => response.data)
+					.catch(error => {
+						if(error.response){
+							console.log("Error code: " + error.response);
+						}
+					});
 				}
+			}
+
+			start();
+
+
 
 			console.log("Done, we're gonna load now");
 			res.render('pages/result',
