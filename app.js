@@ -347,22 +347,27 @@ app.post('/result', function(req,res){
 	console.log(amazonurl);
 	let neweggurl = 'https://www.newegg.com/Product/ProductList.aspx?Submit=ENE&DEPA=0&Order=BESTMATCH&Description='+keyword+'&N=-1&isNodeId=1';
 	console.log(neweggurl);
+	let ebayurl = 'https://www.ebay.com/sch/i.html?_from=R40&_trksid=m570.l1313&_nkw='+keyword+'&_sacat=0';
+	console.log(ebayurl);
 
 	//Axios implementation below ----------------------------
 
-	axios.all([axios.get(amazonurl), axios.get(neweggurl)])
-		.then(axios.spread((amazonres, neweggres) =>{
+	axios.all([axios.get(amazonurl), axios.get(neweggurl), axios.get(ebayurl)])
+		.then(axios.spread((amazonres, neweggres, ebayres) =>{
 			console.log("Before amazon res");
 			let html = amazonres.data;
 			let $ = cheerio.load(html);
 			amazonRequest($, itemNames, itemPrices, imgUrls, itemUrls, itemSource);
 
-			console.log(itemNames[0], itemPrices[0], imgUrls[0], itemUrls[0]);
-
 			console.log("Before neweggres");
 			html = neweggres.data;
 			$ = cheerio.load(html);
 			neweggRequest($, itemNames, itemPrices, imgUrls, itemUrls, itemSource);
+
+			console.log("Before ebayres");
+			html = ebayres.data;
+			$ = cheerio.load(html);
+			ebayRequest($, itemNames, itemPrices, imgUrls, itemUrls, itemSource);
 
 			for( var i = 0; i < itemNames.length; i++)
 				{

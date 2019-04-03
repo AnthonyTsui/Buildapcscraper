@@ -12,7 +12,7 @@ module.exports = {
         source: req.body.source,
         searchterm: req.params.searchterm,
       })
-      .then(user => res.status(201).send(user))
+      .then(searchresults => res.status(201).send(searchresults))
       .catch(error => res.status(400).send(error));
   },
   list(req,res)
