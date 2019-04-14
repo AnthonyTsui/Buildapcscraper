@@ -31,21 +31,6 @@ function neweggRequest($, itemNames, itemPrices, imgUrls, itemUrls, itemSource )
 				const imgUrl = $(temp).find('img').attr('src');
 				const itemUrl = $(temp).find('a').attr('href');
 
-				/*
-
-				itemNames[i] = itemName;
-				console.log("Logged index " + i + " of itemNames with: " + itemName);
-
-				itemPrices[i] = itemPrice;
-				console.log("Logged index " + i + " of itemPrices with: " + itemPrice);
-
-				imgUrls[i] = imgUrl;
-				console.log("Logged index " + i + " of imgUrls with: " + imgUrl);
-
-				itemUrls[i] = itemUrl;
-				console.log("Logged index " + i + " of imgUrls with: " + itemUrl);
-				*/
-
 				itemNames.push(itemName);
 
 				itemPrices.push(itemPrice);
@@ -58,7 +43,7 @@ function neweggRequest($, itemNames, itemPrices, imgUrls, itemUrls, itemSource )
 
 			});
 
-			console.log("------Finished running Newegg request------");
+			//console.log("------Finished running Newegg request------");
 }
 
 
@@ -77,20 +62,6 @@ function ebayRequest($, itemNames, itemPrices, imgUrls, itemUrls, itemSource ){
 
 				const itemUrl = $(temp).find('a').attr('href');
 
-				/*
-				itemNames[i] = itemName;
-				//console.log("Logged index " + i + " of itemNames with: " + itemName);
-
-				itemPrices[i] = itemPrice;
-				//console.log("Logged index " + i + " of itemPrices with: " + itemPrice);
-
-				imgUrls[i] = imgUrl;
-				//console.log("Logged index " + i + " of imgUrls with: " + imgUrl);
-
-				itemUrls[i] = itemUrl;
-				console.log("Logged index " + i + " of itemUrls with: " + itemUrl);
-				*/
-
 
 				itemNames.push(itemName);
 
@@ -106,65 +77,66 @@ function ebayRequest($, itemNames, itemPrices, imgUrls, itemUrls, itemSource ){
 
 			});
 
-			console.log("------Finished running request------");
+			//console.log("------Finished running request------");
 }
 
 
 
 function amazonRequest($, itemNames, itemPrices, imgUrls, itemUrls, itemSource ){
+	let counter = 0;
 	$('.sg-col-inner').each((i, temp) =>{	//returns names and used(?) prices but will not return actual prices along with link references
 				$('.a-section.a-spacing-medium').each((i, temp) =>{
 					let itemPrice = $(temp).find('span.a-price-whole').eq(0).text();			
 					const itemName = $(temp).find('span.a-size-medium.a-color-base.a-text-normal').text();
 					const imgUrl = $(temp).find('.s-image').attr('src');			//this works for finding image links but returns several undefined
 					const itemUrl = $(temp).find('a.a-link-normal.a-text-normal').eq(0).attr('href');
-					if(imgUrl != undefined)
-					{
-						//console.log(imgUrl);
-						//console.log(itemName);
-						if(itemPrice != null && itemPrice != '')
+					//console.log("Index for amazon is: " + counter);
+					counter += 1;
+					if(counter <= 100){
+						if(imgUrl != undefined)
 						{
-							//console.log("$"+itemPrice);
-							itemPrice = "$"+itemPrice;
+							//console.log(imgUrl);
+							//console.log(itemName);
+							if(itemPrice != null && itemPrice != '')
+							{
+								//console.log("$"+itemPrice);
+								itemPrice = "$"+itemPrice;
+							}
+							else
+							{
+								//console.log("See price on site");
+								itemPrice = "See price on site";
+							}
+							//console.log("https://www.amazon.com" + itemUrl);
 						}
-						else
+					
+						if(itemUrl != undefined || itemName != '')
 						{
-							console.log("See price on site");
-							itemPrice = "See price on site";
+							itemNames.push(itemName);
+							//console.log("Logged index " + i + " of itemNames with: " + itemName);
+
+							itemPrices.push(itemPrice);
+							//console.log("Logged index " + i + " of itemPrices with: " + itemPrice);
+
+							imgUrls.push(imgUrl);
+							//console.log("Logged index " + i + " of imgUrls with: " + imgUrl);
+
+							itemUrls.push(itemUrl);
+							//console.log("Logged index " + i + " of itemUrls with: " + itemUrl);
+
+							itemSource.push("amazon");
 						}
-						console.log("https://www.amazon.com" + itemUrl);
+
 					}
 					
-					if(itemUrl != undefined || itemName != '')
-					{
-						itemNames.push(itemName);
-						console.log("Logged index " + i + " of itemNames with: " + itemName);
-
-						itemPrices.push(itemPrice);
-						console.log("Logged index " + i + " of itemPrices with: " + itemPrice);
-
-						imgUrls.push(imgUrl);
-						console.log("Logged index " + i + " of imgUrls with: " + imgUrl);
-
-						itemUrls.push(itemUrl);
-						console.log("Logged index " + i + " of itemUrls with: " + itemUrl);
-
-						itemSource.push("amazon");
-					}
 					
 
 				})
 
 			});
 
-			console.log("------Finished running request------");
+			//console.log("------Finished running request------");
 }
-
-
-
-
-
-
 
 //routes begin below 	-------------------------------------------------------------------------------------------------------------------------
 
@@ -178,44 +150,8 @@ app.get('/', function(req, res)
 	let itemSource = [];
 	//Preliminary testing to render data to front end
 
-	//let url = 'https://www.newegg.com/Product/ProductList.aspx?Submit=ENE&DEPA=0&Order=BESTMATCH&Description=1080&N=-1&isNodeId=1'; //Newegg test link
-	//let url = 'https://www.ebay.com/sch/i.html?_from=R40&_trksid=m570.l1313&_nkw=1080&_sacat=0'; //ebay test link
 	let url = 'https://www.amazon.com/s?k=1080&ref=nb_sb_noss' // amazon test link
-	 //let url = 'https://www.walmart.com/search/?cat_id=0&query=1080'; // walmart test link
-	 //let url = 'https://www.frys.com/search?search_type=regular&sqxts=1&cat=&query_string=1080%20card&nearbyStoreName=false' //frys test link
-	 //let url = 'https://www.target.com/s?searchTerm=1080' //target test link
-
-	/*
-	request(url, {gzip:true}, (error, response, html) =>
-	{
-		if(!error && response.statusCode == 200) 
-		{
-			const $ = cheerio.load(html);
-
-			neweggRequest($, itemNames, itemPrices, imgUrls, itemUrls); //Simplifying some code into a function above, need to look into shortening more with promises or otherwise
-
-
-			res.render('pages/home',
-		        {
-		         	productNames: itemNames,
-		         	productPrices: itemPrices,  
-		         	imgUrls: imgUrls,
-		         	itemUrls: itemUrls,
-		        });
-		}
-		else
-		{
-			console.log("Error on request" + error);
-			res.render('pages/result',
-		        {
-		        	keyword: null,
-		         	productNames: null,
-		         	productPrices: null,  
-		         	imgUrls: null,
-		         	itemUrls: null,
-		        });
-		}
-	}) */
+	
 
 	axios.get(url)
 		.then((response) => {
@@ -320,6 +256,63 @@ app.post('/search', function(req,res){
 	
 });
 
+
+
+app.post('/searchSubstr', function(req,res){
+	let keyword = req.body.keyword;
+	let itemNames = [];
+	let itemPrices = [];
+	let imgUrls = [];
+	let itemUrls = [];
+	let source = [];
+	let url = 'http://localhost:8000/api/searchresults/all/'+keyword;
+
+	axios.post(url)
+		.then((response) => {
+			if(response.status === 200) {
+				console.log(response.data.length);
+				for(let i = 0; i < response.data.length; i++){
+					itemNames[i] = response.data[i].title;
+					itemPrices[i] = response.data[i].price;
+					imgUrls[i] = response.data[i].image;
+					if(response.data[i].source == 'amazon' || response.data[i].source == 'Amazon')
+					{
+						itemUrls[i] = 'https://www.amazon.com'+response.data[i].link;
+					}
+					else
+					{
+						itemUrls[i] = response.data[i].link;
+					}
+					
+					source[i] = response.data[i].source;
+				}
+				res.render('pages/search',
+			        {
+			        	keyword:keyword,
+			         	productNames: itemNames,
+			         	productPrices: itemPrices,  
+			         	imgUrls: imgUrls,
+			         	itemUrls: itemUrls,
+			         	source: source,
+			        });
+			}
+
+		}, (error) => {console.log("Error on request with url" + url +  " with error " +error);
+				res.render('pages/search',
+			        {
+			        	keyword: null,
+			         	productNames: null,
+			         	productPrices: null,  
+			         	imgUrls: null,
+			         	itemUrls: null,
+			         	source: null,
+			        });
+
+		});
+
+	
+});
+
 app.get('/result', function(req,res){
 
 	res.render('pages/result',
@@ -344,29 +337,34 @@ app.post('/result', function(req,res){
 
 
 	let amazonurl = 'https://www.amazon.com/s/?field-keywords=' + keyword;
-	console.log(amazonurl);
+	//console.log(amazonurl);
 	let neweggurl = 'https://www.newegg.com/Product/ProductList.aspx?Submit=ENE&DEPA=0&Order=BESTMATCH&Description='+keyword+'&N=-1&isNodeId=1';
-	console.log(neweggurl);
+	//console.log(neweggurl);
+	let ebayurl = 'https://www.ebay.com/sch/i.html?_from=R40&_trksid=m570.l1313&_nkw='+keyword+'&_sacat=0';
+	//console.log(ebayurl);
 
 	//Axios implementation below ----------------------------
 
-	axios.all([axios.get(amazonurl), axios.get(neweggurl)])
-		.then(axios.spread((amazonres, neweggres) =>{
+	axios.all([axios.get(amazonurl), axios.get(neweggurl), axios.get(ebayurl)])
+		.then(axios.spread((amazonres, neweggres, ebayres) =>{
 			console.log("Before amazon res");
 			let html = amazonres.data;
 			let $ = cheerio.load(html);
 			amazonRequest($, itemNames, itemPrices, imgUrls, itemUrls, itemSource);
-
-			console.log(itemNames[0], itemPrices[0], imgUrls[0], itemUrls[0]);
 
 			console.log("Before neweggres");
 			html = neweggres.data;
 			$ = cheerio.load(html);
 			neweggRequest($, itemNames, itemPrices, imgUrls, itemUrls, itemSource);
 
-			for( var i = 0; i < itemNames.length; i++)
-				{
-					axios.post('http://localhost:8000/api/keysearches/'+keyword+'/searchresults',{
+			console.log("Before ebayres");
+			html = ebayres.data;
+			$ = cheerio.load(html);
+			ebayRequest($, itemNames, itemPrices, imgUrls, itemUrls, itemSource);
+
+			const start = async() => {
+				for( var i = 0; i < itemNames.length; i++){
+					await axios.post('http://localhost:8000/api/keysearches/'+keyword+'/searchresults',{
 					title: itemNames[i],
 					image: imgUrls[i],
 					link: itemUrls[i],
@@ -379,8 +377,12 @@ app.post('/result', function(req,res){
 							console.log("Error code: " + error.response);
 						}
 					});
-
 				}
+			}
+
+			start();
+
+
 
 			console.log("Done, we're gonna load now");
 			res.render('pages/result',
@@ -411,9 +413,6 @@ app.post('/result', function(req,res){
 
 
 
-//app.listen(port, () => console.log('App listening on port ${port}!'))
-
-//require('./server/routes')(app);
 
 app.get('*', (req, res) => res.status(200).send({
   message: "Uh oh you shouldn't be here.",

@@ -15,6 +15,8 @@ module.exports = (app) => {
 	app.post('/api/keysearches/:searchterm/searchresults', searchresultsController.create);
 	app.get('/api/searchresults', searchresultsController.list);
 	app.post('/api/searchresults/:keyword', searchresultsController.retrieve);
+	app.post('/api/searchresults/all/:keyword', searchresultsController.like);
+
 	app.put('/api/searchresults/:resultID', searchresultsController.update);
 	app.delete('/api/searchresults/:resultID', searchresultsController.destroy);
 };

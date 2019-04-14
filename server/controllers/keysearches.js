@@ -9,7 +9,7 @@ module.exports = {
         title: req.body.title,
         itemtype: req.body.itemtype,
       })
-      .then(user => res.status(201).send(user))
+      .then(keysearches=> res.status(201).send(keysearches))
       .catch(error => res.status(400).send(error));
   },
   list(req,res)
