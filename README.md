@@ -1,4 +1,4 @@
-# webscraper-pricechecker
+# Buildapcscraper
 Building a price checker of PC parts/ various products with the usage of a web scarper or just interacting with APIs.
 Current sites being used/scraped are: Amazon, Ebay, Newegg. (Potentially) other sites: Fry's, Microcenter
 
