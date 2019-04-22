@@ -6,7 +6,7 @@ Database updates/creations will be done with node-cron or another similar module
 
 No plans for users or sessions at the moment, like most likely not be necessary for the purposes of this project.
 
-## Planned features:
+## Planned features/Stretch Goals:
 * Price History Graph 
 * Reddit API for /r/buildapcsales
 * Same functionalities but for video games
