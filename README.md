@@ -9,7 +9,7 @@ No plans for users or sessions at the moment, like most likely not be necessary 
 ## Planned features/Stretch Goals:
 * Price History Graph 
 * Reddit API for /r/buildapcsales
-* Same functionalities but for video games
+* Same functionalities but for video games (This will similarly include various vendors such as gog, steam, amazon, etc)
 
 ## This app is using the following dependencies:
 * Cheerio v1.0.0-rc.2
