@@ -15,7 +15,7 @@
     "body-parser": "^1.18.3",
     "cheerio": "^1.0.0-rc.2",
     "ejs": "^2.6.1",
-    "express": "^4.16.4",
+    "express": "^4.17.3",
     "html-entities": "^1.2.1",
     "iconv-lite": "^0.4.24",
     "morgan": "^1.9.1",
